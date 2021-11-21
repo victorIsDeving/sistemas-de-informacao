@@ -1,0 +1,39 @@
+for (int i = 0; i < 3; i++) {
+    if ( tabuleiro[i][0] == pecaX && tabuleiro[i][1] == pecaX && tabuleiro[i][2] == pecaX ) {  // todas as linhas para X
+        status = 1;
+        break;
+    } else if ( tabuleiro[i][0] == pecaY && tabuleiro[i][1] == pecaY && tabuleiro[i][2] == pecaY ) {  // todas as linhas para Y
+        status = 2;
+        break;
+    } else if ( tabuleiro[0][i] == pecaX && tabuleiro[1][i] == pecaX && tabuleiro[2][i] == pecaX ) {  // todas as colunas para X
+        status = 1;
+        break;
+    } else if ( tabuleiro[0][i] == pecaY && tabuleiro[1][i] == pecaY && tabuleiro[2][i] == pecaY ) {  // todas as colunas para Y
+        status = 2;
+        break;
+    } else if ( tabuleiro[0][0] == pecaX && tabuleiro[1][1] == pecaX && tabuleiro[2][2] == pecaX ) { // diagonal principal 
+        status = 1;
+        break;
+    } else if ( tabuleiro[0][0] == pecaY && tabuleiro[1][1] == pecaY && tabuleiro[2][2] == pecaY ) {
+        status = 2;
+        break;
+    } else if ( tabuleiro[0][2] == pecaX && tabuleiro[1][1] == pecaX && tabuleiro[2][0] == pecaX ) { // diagonal secundária 
+        status = 1;
+        break;
+    } else if ( tabuleiro[0][2] == pecaY && tabuleiro[1][1] == pecaY && tabuleiro[2][0] == pecaY ) {
+        status = 2;
+        break;
+    } else if ( countVazios == 0 ) {
+        /**
+            * Se nem o X nem o Y ganhou e não tem nenhum campo vazio no tabuleiro
+            * Então o jogo terminou empatado 
+        */ 
+        status = 3;
+    } else {
+        /**
+            * Nem o X nem o Y ganhou e ainda tem espaços vazios no tabuleiro
+            * Então o jogo ainda está em andamento
+        */
+        status = 4;
+    }
+}

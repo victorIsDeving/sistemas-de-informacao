@@ -1,0 +1,112 @@
+ATENCAO: Nem todas as caracteristicas do enunciado sao testadas neste exemplo.
+         Cabe a cada aluno(a) testar cuidadosamente seu EP.
+
+*** Criando Clientes **************************************
+*** Criando Gerentes **************************************
+*** Criando um Banco **************************************
+*** Adicionando clientes ao Gerente 1 **************************
+Cliente 'Cliente A' adicionado corretamente.
+Cliente 'Cliente B' adicionado corretamente.
+Cliente 'Cliente B' nao pode ser adicionado.
+Cliente 'Cliente C' adicionado corretamente.
+*** Adicionando clientes ao Gerente 2 **************************
+Cliente 'Cliente C' adicionado corretamente.
+Cliente 'Cliente D' adicionado corretamente.
+*** Adicionando Gerentes ao Banco ******************************
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222    10000        0 0
+   2 E Cliente B	      33333     2000        0 0
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555       10        0 0
+#########################################################################
+*** Testando a funcao obterEmprestimo **************************
+Cliente 'Cliente D' obteve o emprestimo solicitado.
+Cliente 'Cliente D' nao obteve o emprestimo solicitado.
+Cliente 'Cliente B' obteve o emprestimo solicitado.
+Cliente 'Cliente B' obteve o emprestimo solicitado.
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222    10000        0 0
+   2 E Cliente B	      33333    42000    40000 0
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555    20010    20000 0
+#########################################################################
+*** Testando a funcao realizarSaque ****************************
+Cliente 'Cliente B' realizou o saque solicitado.
+Cliente 'Cliente B' realizou o saque solicitado.
+Cliente 'Cliente A' realizou o saque solicitado.
+Cliente 'Cliente A' nao pode realizar o saque solicitado.
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222        0        0 0
+   2 E Cliente B	      33333    17310    40000 1
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555    20010    20000 0
+#########################################################################
+*** Testando a funcao pagarEmprestimo **************************
+Cliente 'Cliente A' nao pode pagar (parte de) sua divida.
+Cliente 'Cliente B' pagou (parte de) sua divida.
+Cliente 'Cliente C' nao pode pagar (parte de) sua divida.
+Cliente 'Cliente D' pagou (parte de) sua divida.
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222        0        0 0
+   2 E Cliente B	      33333    17210    39900 1
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555    19910    19900 0
+#########################################################################
+*** Testando a funcao cobrarTodosEmprestimos *******************
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222        0        0 0
+   2 E Cliente B	      33333        0    22690 1
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555    19910    19900 0
+#########################################################################
+#########################################################################
+Imprimindo informacoes do banco.
+Ha 2 gerente(s) neste banco.
+Gerente: Gerente 1	CPF: 12345
+	Numero de clientes: 3
+   1 C Cliente A	      22222        0        0 0
+   2 E Cliente B	      33333        0    22690 1
+   3 C Cliente C	      44444    30000        0 0
+Gerente: Gerente 2	CPF: 12121
+	Numero de clientes: 2
+   1 C Cliente C	      44444    30000        0 0
+   2 C Cliente D	      55555       10        0 0
+#########################################################################
+
+ATENCAO: Nem todas as caracteristicas do enunciado sao testadas neste exemplo.
+         Cabe a cada aluno testar cuidadosamente seu EP.
