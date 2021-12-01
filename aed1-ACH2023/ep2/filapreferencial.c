@@ -113,11 +113,21 @@ bool inserirPessoaNaFila(PFILA f, int id, bool ehPreferencial){
 }
 
 bool atenderPrimeiraDaFila(PFILA f, int* id){
+	if ( f->cabeca->prox == f->cabeca ) return false;
+	
+	PONT primeiro = f->cabeca->prox;
+	*id = primeiro->id;
 
-	/* COMPLETE */
+	f->cabeca->prox = primeiro->prox;
+	primeiro->prox->ant = f->cabeca;
 
+	if(!primeiro->ehPreferencial) {
+		f->inicioNaoPref = primeiro->prox;
+	}
 
-	return false;
+	free(primeiro);
+
+	return true;
 }
 
 
