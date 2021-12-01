@@ -1,11 +1,11 @@
 /*********************************************************************/
 /**   ACH2023 - Algoritmos e Estruturas de Dados I                  **/
 /**   EACH-USP - Segundo Semestre de 2021                           **/
-/**   <turma> - Prof. Luciano Antonio Digiampietri                  **/
+/**   094 - Prof. Luciano Antonio Digiampietri                      **/
 /**                                                                 **/
 /**   EP 2 - Fila Preferencial                                      **/
 /**                                                                 **/
-/**   <nome do(a) aluno(a)>                   <numero USP>          **/
+/**   Victor Augusto Costa Monteiro             8942937             **/
 /**                                                                 **/
 /*********************************************************************/
 
@@ -71,12 +71,45 @@ bool consultarPreferencial(PFILA f, int id){
 
 
 bool inserirPessoaNaFila(PFILA f, int id, bool ehPreferencial){
+	if ( id<0 || buscarID(f, id) ) return false;
 
-	/* COMPLETE */
+	PONT novoId = (PONT) malloc(sizeof(ELEMENTO));
+	novoId->id = id;
+	novoId->ehPreferencial = ehPreferencial;
 
+	if (novoId->ehPreferencial) { //novo id eh preferencial
+		PONT ultPreferencial = f->cabeca->prox;
+		if ( ultPreferencial == f->inicioNaoPref ) { //a fila preferencial está vazia
+			f->cabeca->prox = novoId;
+			f->inicioNaoPref->ant = novoId;
+			novoId->ant = f->cabeca;
+			novoId->prox = f->inicioNaoPref;
+		} else { //fila preferencial não vazia
+			while (ultPreferencial->prox != f->inicioNaoPref) {
+				ultPreferencial = ultPreferencial->prox;
+			}
+			ultPreferencial->prox = novoId;
+			f->inicioNaoPref->ant = novoId;
+			novoId->ant = ultPreferencial;
+			novoId->prox = f->inicioNaoPref;
+		}
+	} else { //novoId nao eh preferencial
+		PONT ultNaoPreferencial = f->inicioNaoPref;
+		if ( ultNaoPreferencial == f->cabeca ) { //fila não preferencial está vazia
+			f->inicioNaoPref = novoId;
+			f->cabeca->ant->prox = novoId;
+			novoId->ant = f->cabeca->ant;
+			novoId->prox = f->cabeca;
+			f->cabeca->ant = novoId;
+		} else { //fila não preferencial não está vazia
+			f->cabeca->ant->prox = novoId;
+			novoId->ant = f->cabeca->ant;
+			novoId->prox = f->cabeca;
+			f->cabeca->ant = novoId;
+		}
+	}
 
-
-	return false;
+	return true;
 }
 
 bool atenderPrimeiraDaFila(PFILA f, int* id){
