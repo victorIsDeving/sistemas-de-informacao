@@ -132,9 +132,21 @@ bool atenderPrimeiraDaFila(PFILA f, int* id){
 
 
 bool desistirDaFila(PFILA f, int id){
+	PONT elemento = buscarID(f, id);
+	
+	if ( id>0 && elemento ) {
+		PONT anterior = elemento->ant;
+		PONT proximo = elemento->prox;
 
-	/* COMPLETE */
+		anterior->prox = proximo;
+		proximo->ant = anterior;
 
+		if ( elemento == f->inicioNaoPref ) f->inicioNaoPref = elemento->prox;
+		
+		free(elemento);
+		
+		return true;
+	}
 
 	return false;
 }
