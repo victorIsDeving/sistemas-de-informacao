@@ -8,9 +8,9 @@ Dentre as operações previstas numa fila de prioridade estão:
     • consulta da prioridade de um elemento;
     • consulta à quantidade de elementos (tamanho) da fila.
 
-<object data="http://http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="http://http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="http://http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf">Download PDF</a>.</p>
+<object data="http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="http://www.each.usp.br/digiampietri/ACH2023/ep3/ep3_enunciado.pdf">Download PDF</a>.</p>
     </embed>
 </object>
 
