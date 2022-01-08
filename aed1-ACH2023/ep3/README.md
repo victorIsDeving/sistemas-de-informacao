@@ -19,6 +19,7 @@ Dentre as operações previstas numa fila de prioridade estão:
 Log [elementos: 0]
 
 
+--- INSERÇÃO
 ok
 Log [elementos: 1]
 [1;1.000000;0] 
@@ -39,6 +40,9 @@ nok (5)
 Log [elementos: 4]
 [3;3.000000;0] [1;1.000000;1] [2;2.000000;2] [0;0.000000;3] 
 
+
+
+--- AUMENTAR PRIORIDADE
 nok (6)
 Log [elementos: 4]
 [3;3.000000;0] [1;1.000000;1] [2;2.000000;2] [0;0.000000;3] 
@@ -59,6 +63,9 @@ nok (10) - esperado, elemento com id=4 nao existe
 Log [elementos: 4]
 [0;15.000000;0] [3;4.000000;1] [2;2.000000;2] [1;1.000000;3] 
 
+
+
+--- REMOÇÃO
 Prioritario: 0, 15.000000
 Log [elementos: 3]
 [3;4.000000;0] [1;1.000000;1] [2;2.000000;2] 
@@ -87,6 +94,8 @@ Fila vazia (7)
 Log [elementos: 0]
 
 
+
+--- INSERÇÃO
 ok
 Log [elementos: 1]
 [1;1.000000;0] 
@@ -109,7 +118,7 @@ Log [elementos: 4]
 
 
 
-Reduzindo prioridade
+--- REDUZIR PRIORIDADE
 nok (15)
 Log [elementos: 4]
 [3;3.000000;0] [1;1.000000;1] [2;2.000000;2] [0;0.500000;3] 
