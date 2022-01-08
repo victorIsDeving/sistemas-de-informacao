@@ -4,6 +4,8 @@
    vao de 0 (zero) a quatro, pois MAX vale 5   */
 int main() {
   PFILA f = criarFila();
+  float var1, var2, var3, var4; //variáveis para a consulta de prioridade
+
   exibirLog(f);
   printf("--- INSERÇÃO\n");
   if(inserirElemento(f, 1, 1)) printf("ok\n");
@@ -24,7 +26,6 @@ int main() {
 
   printf("--- CONSULTA PRIORIDADE\n");
   exibirLog(f);
-  float var1, var2, var3, var4;
   if(consultarPrioridade(f, 1, &var1)) printf("ok - prioridade id %i eh %f\n", 1, var1);
   else printf("nok\n");
   if(consultarPrioridade(f, 3, &var2)) printf("ok - prioridade id %i eh %f\n", 3, var2);
@@ -50,6 +51,17 @@ int main() {
   if(aumentarPrioridade(f, 4, 4)) printf("ok\n");
   else printf("nok (10) - esperado, elemento com id=4 nao existe\n");
   exibirLog(f);
+
+  printf("--- CONSULTA PRIORIDADE\n");
+  exibirLog(f);
+  if(consultarPrioridade(f, 1, &var1)) printf("ok - prioridade id %i eh %f\n", 1, var1);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 3, &var2)) printf("ok - prioridade id %i eh %f\n", 3, var2);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 2, &var3)) printf("ok - prioridade id %i eh %f\n", 2, var3);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 0, &var4)) printf("ok - prioridade id %i eh %f\n", 0, var4);
+  else printf("nok\n");
   
   printf("\n\n--- REMOÇÃO\n");
   PONT prioritario;
@@ -98,7 +110,18 @@ int main() {
   if(inserirElemento(f, 5, 5)) printf("ok\n");
   else printf("nok (14)\n");
   exibirLog(f);
-
+  
+  printf("--- CONSULTA PRIORIDADE\n");
+  exibirLog(f);
+  if(consultarPrioridade(f, 1, &var1)) printf("ok - prioridade id %i eh %f\n", 1, var1);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 3, &var2)) printf("ok - prioridade id %i eh %f\n", 3, var2);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 2, &var3)) printf("ok - prioridade id %i eh %f\n", 2, var3);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 0, &var4)) printf("ok - prioridade id %i eh %f\n", 0, var4);
+  else printf("nok\n");
+  
   printf("\n\n--- REDUZIR PRIORIDADE\n");
   if(reduzirPrioridade(f, 5, 0)) printf("ok\n");
   else printf("nok (15)\n");
@@ -115,8 +138,17 @@ int main() {
   if(reduzirPrioridade(f, 4, 1)) printf("ok\n");
   else printf("nok (19) - esperado, elemento com id=4 nao existe\n");
   exibirLog(f);
-
-
+  
+  printf("--- CONSULTA PRIORIDADE\n");
+  exibirLog(f);
+  if(consultarPrioridade(f, 1, &var1)) printf("ok - prioridade id %i eh %f\n", 1, var1);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 3, &var2)) printf("ok - prioridade id %i eh %f\n", 3, var2);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 2, &var3)) printf("ok - prioridade id %i eh %f\n", 2, var3);
+  else printf("nok\n");
+  if(consultarPrioridade(f, 0, &var4)) printf("ok - prioridade id %i eh %f\n", 0, var4);
+  else printf("nok\n");
 
   return 0;
 }
