@@ -286,14 +286,6 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 		}
 	}
 
-	// printf("\n");
-	// printListaCustos(custos, V, highValue);
-	// printListaAbertos(abertos, V);
-	// printListaPredecessores(predecessores, V);
-	// printListaDistancias(distancias, V);
-	// printListaTiposT(tiposT, V);
-	// printf("\n");
-
 	//encontrando o ponto de chegada do caminho, dos possíveis em tiposT
 	int p,dist2;
 	NO* auxiliar = (NO*) malloc(sizeof(NO));
@@ -315,8 +307,6 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 			}
 		}
 	}
-
-	// printf("auxiliar->v: %i\n", auxiliar->v);
 	
 	//vértices no caminho v1 até v2, de trás para frente
 	int r = 1;
@@ -330,12 +320,8 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 		}
 	}
 	verticesCaminho[r] = s;
-	
-	// printf("valor de r: %i\n", r);
-	// printListaVerticesCaminho(verticesCaminho, V);
-	// printListaCustos(custos, V);
 
-
+	//construção da lista ligada resposta
 	NO* vs = caminho;
 	int atual;
 	while (r > 0) { 
