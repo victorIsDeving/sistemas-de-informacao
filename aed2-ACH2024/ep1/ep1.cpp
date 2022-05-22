@@ -143,6 +143,15 @@ void printListaTiposT(int* listaTipos, int V) {
 	printf("\n");
 
 }
+
+void printListaVerticesCaminho(int* listaVerticesCaminho, int V) {
+	printf("lista do caminho de v1 ao tipo t de trás para frente\n	");
+	for (int i=0; i<V; i++) {
+		printf("%d ", listaVerticesCaminho[i]);
+	}
+	printf("\n");
+
+}
 //^^^^^ ------------------- FUNÇÕES E ESTRUTURAS PARA TESTES ------------------- ^^^^^
 
 
@@ -152,7 +161,7 @@ void printListaTiposT(int* listaTipos, int V) {
 NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t);
 
 //função auxiliar 1 - inicializar as listas paralelas
-int inicializaListasParalelas(int verticesGrafo, int* listaCustos, int* listaAbertos, int* listaPredecessores, int* listaDistancias, int* listaTipos, int verticeRaiz) {
+int inicializaListasParalelas(int verticesGrafo, int* listaCustos, int* listaAbertos, int* listaPredecessores, int* listaDistancias, int* listaTipos, int* listaVertices, int verticeRaiz) {
 	int i;
 	
 	//custo 10^9 é a custo ainda não definido
@@ -164,8 +173,7 @@ int inicializaListasParalelas(int verticesGrafo, int* listaCustos, int* listaAbe
 	* mas não sei se daria problema nos algoritmos de correção do EP
 	*/
 
-
-	// 0=fechado e 1=aberto
+	//0=fechado e 1=aberto
 	for (i = 0; i<verticesGrafo; i++) listaAbertos[i] = 1;
 
 	//predecessor -1 é o que não está definido ainda
@@ -175,8 +183,11 @@ int inicializaListasParalelas(int verticesGrafo, int* listaCustos, int* listaAbe
 	//distancias, em arestas, do vértice raiz definidas como 0 no início
 	for (i = 0; i<verticesGrafo; i++) listaDistancias[i] = 0;
 
-	// todos os tipos definidos como 0
-	for( int m=0; m<verticesGrafo; m++) listaTipos[m] = 0;
+	//todos os tipos definidos como 0
+	for(i = 0; i<verticesGrafo; i++) listaTipos[i] = 0;
+	
+	//todos os vertices do caminho inicialmente definidos como -1
+	for(i = 0; i<verticesGrafo; i++) listaVertices[i] = -1;
 
 	return 1;
 }
@@ -228,17 +239,8 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 	int predecessores[V]; //lista paralela do predecessor que tem o caminho mais curto para o vértice, partindo da raiz definida como v1 na função
 	int distancias[V]; //lista paralela da distância (em arestas) do vértice raiz até os vértices restantes
 	int tiposT[V]; //lista paralela que marca o índice do vértice com 1 se for do tipo procurado
-	inicializaListasParalelas(V, custos, abertos, predecessores, distancias, tiposT, v1);
-
-	// printf("\n");
-	// printListaCustos(custos, V);
-	// printListaAbertos(abertos, V);
-	// printListaPredecessores(predecessores, V);
-	// printListaDistancias(distancias, V);
-	// printListaTiposT(tiposT, V);
-	// printf("\n");
-
-	// printf("Djikstra rolando\n");
+	int verticesCaminho[V]; //lista parelala para marcar os vértices do caminho de v1 até t
+	inicializaListasParalelas(V, custos, abertos, predecessores, distancias, tiposT, verticesCaminho, v1);
 
 	while (existeAberto(V,abertos)) {
 		int u = menorCusto(V, abertos, custos);
@@ -249,31 +251,11 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 			if( g[no->v].tipo == t ) tiposT[no->v] = 1;
 			no = no->prox;
 		}
-		// int s = 0;
-		// for(s; s<V; s++) {
-		// 	if(tiposT[s] == 1) break;
-		// }
-		// if (s!=V) break;
 	}
 
-	//definir as distâncias do vértice raiz
-	int j = 1;
-	for(int i =0; i<V; i++) {
-		if (i==v1) {
-			distancias[i] = 0;
-		} else {
-			int k = predecessores[i];
-			while (k != v1) {
-				j++;
-				k = predecessores[k];
-			}
-			distancias[i] = j;
-			j=1;
-		}		
-	}
-	// printf("\n");
+	//condição para o caso de v1 não alcançar um vértice de tipo t(não há caminho possível ou tipo t não existe no grafo)
+	for(int i=0; i<V; i++) if(custos[i]==1000000000) return caminho;
 
-	
 	// printf("\n");
 	// printListaCustos(custos, V);
 	// printListaAbertos(abertos, V);
@@ -282,32 +264,87 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 	// printListaTiposT(tiposT, V);
 	// printf("\n");
 
-	int p,q,dist2;
-	NO* v2 = (NO*) malloc(sizeof(NO));
-	v2->v = -1;
-	v2->custo = -1;
-	v2->prox = NULL;
+	//definir as distâncias do vértice raiz
+	int j = 1;
+	for(int i =0; i<V; i++) {
+		if (i==v1) {
+			distancias[i] = 0;
+		} else {
+			int k = predecessores[i];
+			while ( k != v1 || j == V ) {
+				// printf("teste");
+				j++;
+				k = predecessores[k];
+			}
+			distancias[i] = j;
+			j=1;
+		}
+	}
+
+
+	//encontrando o ponto de chegada do caminho, dos possíveis em tiposT
+	int p,dist2;
+	NO* auxiliar = (NO*) malloc(sizeof(NO));
+	auxiliar->v = -1;
+	auxiliar->custo = -1;
+	auxiliar->prox = NULL;
 	for(p=0; p<V; p++) {
 		if( tiposT[p]==1 && p!=v1 ) {
-			v2->v = p;
+			auxiliar->v = p;
 			dist2 = distancias[p];
-			v2->custo = custos[p];
-			for(q=p+1; q<V; q++) {
-				if (tiposT[q]==1 && q!=v1 && dist2>distancias[q] && v2->custo>custos[q]) {
-					v2->v = q;
-					dist2 = distancias[q];
-					v2->custo = custos[q];
+			auxiliar->custo = custos[p];
+			p++;
+			for(p; p<V; p++) {
+				if (tiposT[p]==1 && p!=v1 && dist2>=distancias[p] && auxiliar->custo>custos[p]) {
+					auxiliar->v = p;
+					dist2 = distancias[p];
+					auxiliar->custo = custos[p];
 				}
 			}
 		}
 	}
 
-	//condicional para o caso de não ter o tipo alvo no grafo
-	if (v2->v == -1) return caminho;
+	// printf("auxiliar->v: %i\n", auxiliar->v);
+	
+	//vértices no caminho v1 até v2, de trás para frente
+	int r = 1;
+	verticesCaminho[0] = auxiliar->v;
+	int s = predecessores[auxiliar->v];
+	if ( s != v1 ) {
+		while (s != v1) {
+			verticesCaminho[r] = s;
+			s = predecessores[s];
+			r++;
+		}
+	}
+	verticesCaminho[r] = s;
+	
+	// printf("valor de r: %i\n", r);
+	// printListaVerticesCaminho(verticesCaminho, V);
+	// printListaCustos(custos, V);
 
-	caminho->prox = v2;
+
+	NO* vs = caminho;
+	int atual;
+	while (r > 0) { 
+		atual = verticesCaminho[r];
+		auxiliar = g[atual].inicio;
+		if (auxiliar->v) {
+			while( auxiliar->v != verticesCaminho[r-1] ) {
+				auxiliar = auxiliar->prox;
+			}
+			NO* noSeguinte = (NO*) malloc(sizeof(NO));
+			noSeguinte->v = auxiliar->v;
+			noSeguinte->custo = auxiliar->custo;
+			noSeguinte->prox = NULL;
+
+			vs->prox = noSeguinte;
+			vs = noSeguinte;
+		}
+		r--;
+	}
+
 	return caminho;
-
 }
 //^^^^^ ------------------- FUNÇÃO PRINCIPAL E AUXILIARES ------------------- ^^^^^
 
@@ -354,8 +391,8 @@ int main()
 	criaAresta(gr,7,8,1);
 
 	imprime(gr);
-	int verticeRaiz = 0;
-	int tipoAlvo = 6;
+	int verticeRaiz = 3;
+	int tipoAlvo = 2;
 	NO* caminho = EncontrarCaminho(gr->adj, vertices, verticeRaiz, tipoAlvo);
 
 	printf("\n");
@@ -365,5 +402,4 @@ int main()
 		caminho = caminho->prox;
 		if(caminho) printf(" -> ");
 	}
-
 }
