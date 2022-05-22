@@ -253,16 +253,14 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 		}
 	}
 
+	//condição para o caso de v1 ser o único vértice do grafo com o tipo buscado
+	if(tiposT[v1]==1) {
+		int a = 0;
+		for(int i=0; i<V; i++) if(tiposT[i]==1) a++;
+		if(a==1) return caminho;
+	}
 	//condição para o caso de v1 não alcançar um vértice de tipo t(não há caminho possível ou tipo t não existe no grafo)
 	for(int i=0; i<V; i++) if(custos[i]==1000000000) return caminho;
-
-	// printf("\n");
-	// printListaCustos(custos, V);
-	// printListaAbertos(abertos, V);
-	// printListaPredecessores(predecessores, V);
-	// printListaDistancias(distancias, V);
-	// printListaTiposT(tiposT, V);
-	// printf("\n");
 
 	//definir as distâncias do vértice raiz
 	int j = 1;
@@ -280,6 +278,14 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 			j=1;
 		}
 	}
+
+	printf("\n");
+	printListaCustos(custos, V);
+	printListaAbertos(abertos, V);
+	printListaPredecessores(predecessores, V);
+	printListaDistancias(distancias, V);
+	printListaTiposT(tiposT, V);
+	printf("\n");
 
 
 	//encontrando o ponto de chegada do caminho, dos possíveis em tiposT
@@ -391,8 +397,8 @@ int main()
 	criaAresta(gr,7,8,1);
 
 	imprime(gr);
-	int verticeRaiz = 3;
-	int tipoAlvo = 2;
+	int verticeRaiz = 5;
+	int tipoAlvo = 3;
 	NO* caminho = EncontrarCaminho(gr->adj, vertices, verticeRaiz, tipoAlvo);
 
 	printf("\n");
