@@ -238,7 +238,7 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 	// printListaTiposT(tiposT, V);
 	// printf("\n");
 
-	printf("Djikstra rolando\n");
+	// printf("Djikstra rolando\n");
 
 	while (existeAberto(V,abertos)) {
 		int u = menorCusto(V, abertos, custos);
@@ -271,30 +271,41 @@ NO* EncontrarCaminho(VERTICE* g, int V, int v1, int t) {
 			j=1;
 		}		
 	}
-	printf("\n");
+	// printf("\n");
 
 	
-	printf("\n");
-	printListaCustos(custos, V);
-	printListaAbertos(abertos, V);
-	printListaPredecessores(predecessores, V);
-	printListaDistancias(distancias, V);
-	printListaTiposT(tiposT, V);
-	printf("\n");
+	// printf("\n");
+	// printListaCustos(custos, V);
+	// printListaAbertos(abertos, V);
+	// printListaPredecessores(predecessores, V);
+	// printListaDistancias(distancias, V);
+	// printListaTiposT(tiposT, V);
+	// printf("\n");
 
-	int v2 = 0;
-	for(int p=0; p<V; p++) {
+	int p,q,dist2;
+	NO* v2 = (NO*) malloc(sizeof(NO));
+	v2->v = -1;
+	v2->custo = -1;
+	v2->prox = NULL;
+	for(p=0; p<V; p++) {
 		if( tiposT[p]==1 && p!=v1 ) {
-			int dist = distancias[p];
-			int q = p+1;
-			for(int q; q<V; q++) {
-				if ( tiposT[q]==1 && q!=v1 ) {
-					
+			v2->v = p;
+			dist2 = distancias[p];
+			v2->custo = custos[p];
+			for(q=p+1; q<V; q++) {
+				if (tiposT[q]==1 && q!=v1 && dist2>distancias[q] && v2->custo>custos[q]) {
+					v2->v = q;
+					dist2 = distancias[q];
+					v2->custo = custos[q];
 				}
 			}
 		}
 	}
 
+	//condicional para o caso de não ter o tipo alvo no grafo
+	if (v2->v == -1) return caminho;
+
+	caminho->prox = v2;
 	return caminho;
 
 }
@@ -344,7 +355,7 @@ int main()
 
 	imprime(gr);
 	int verticeRaiz = 0;
-	int tipoAlvo = 5;
+	int tipoAlvo = 6;
 	NO* caminho = EncontrarCaminho(gr->adj, vertices, verticeRaiz, tipoAlvo);
 
 	printf("\n");
@@ -352,7 +363,7 @@ int main()
 	while(caminho) {
 		printf("v%i(%i)", caminho->v, caminho->custo);
 		caminho = caminho->prox;
-		if(caminho) printf("-> ");
+		if(caminho) printf(" -> ");
 	}
 
 }
