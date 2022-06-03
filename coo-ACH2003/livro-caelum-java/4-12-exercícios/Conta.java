@@ -12,27 +12,17 @@ public class Conta {
     double saldo;
     Data dataAbertura;
 
-    boolean sacar(double valorSaque) {
+    void sacar(double valorSaque) {
         saldo -= valorSaque;
-        return true;
     }
 
-    boolean deposito(double valorDeposito) {
+    void deposito(double valorDeposito) {
         saldo += valorDeposito;
-        return true;
     }
 
     double calculaRendimento() {
         return saldo*0.1;
     }
-
-    // void recuperaDadosParaImpressao() {
-    //     System.out.println("\nNome:   "+this.nomeTitular);
-    //     System.out.println("Numero da conta:   "+this.numeroConta);
-    //     System.out.println("Agencia:   "+this.agencia);
-    //     System.out.println("Saldo disponivel:   "+this.saldo);
-    //     System.out.println("Data de abertura:   "+this.dataAbertura);
-    // }
 
     String recuperaDadosParaImpressao() {
         String dados = "\nNome:   " + this.nomeTitular;
