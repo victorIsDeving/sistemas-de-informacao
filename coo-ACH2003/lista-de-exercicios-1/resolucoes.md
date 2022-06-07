@@ -26,10 +26,10 @@ Os tipos genéricos dão maior estabilidade para o código, permite a detecção
 Tornar um atributo privado faz com que apenas a classe que declara esse atributo tenha o poder de fazer modificações nele. Isso facilita muito a implementação de mudanças, é o _encapsulamento_ dos membros de uma classe. O uso de métodos `get`e `set` é a forma pela qual iremos acessar ou mudar o valor do atributo fora dessa classe. 
 Essa forma de implementação em que os atributos são privados e os métodos são públicos (_interface da classe_, como nos comunicamos com os objetos dessa classe) é muito comum, dessa forma, se tivermos que fazer alguma alteração com relação ao atributo privado não precisamos ir em todos os lugares do código em que esse atributo foi utilizado para adaptar, basta alterarmos os métodos `get` e `set`.
 
-> PROGRAMANDO VOLTADO À INTERFACE, E NÃO À IMPLEMENTAÇÃO
+> PROGRAMANDO VOLTADO À INTERFACE, E NÃO À IMPLEMENTAÇÃO  
 > É sempre bom programar pensando na interface da sua classe, em como seus usuários estarão utilizando-a, e não somente em como ela funcionará.  
 > A implementação em si, o conteúdo dos métodos, não tem tanta importância para o usuário dessa classe, pois ele só precisa saber o que cada método pretende fazer, e não como ele o faz, porque isso pode mudar com o tempo.  
-> Essa frase vem do livro Design Patterns, de Eric Gamma et al., que é cultuado no meio da orientação a objetos.
+> Essa frase vem do livro Design Patterns, de Eric Gamma et al., que é cultuado no meio da orientação a objetos.  
 
 ### Ex 3
 #### Explique como composição pode ser usada como uma alternativa à herança
@@ -41,6 +41,7 @@ A composição pode ser usada como uma alternativa à herança quando uma classe
 #### Suponha que você esteja trabalhando na implementação de uma certa classe, e você precise disponibilizar a informação de quantas instâncias desta classe foram criadas desde o momento em que o programa iniciou sua execução, até o instante atual. Qual seria uma boa forma de implementar tal funcionalidade?
 Usando um construtor de classe. Com o um construtor nós vamos criar uma "rotina" de inicialização da classe que estamos monitorando, podemos criar um atributo contadore colocar nessa rotina de inicialização um incremento nesse atributo contador.  
 Esse atributo contador pode ser um do tipo *static*, assim ele não será um atributo de cada objeto criado a partir da classe, mas um atributo da própria classe. Para recuperar esse atributo, podemos criar um `getter` que pega esse valor, ao invés de usar `this.contador` ele usa o próprio nome da classe para recuperar esse valor.  
+
     class Conta {
         private static int totalDeContas;
         //...
