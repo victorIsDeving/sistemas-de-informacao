@@ -134,3 +134,9 @@ A palavra `throw` lança uma `Exception`, já a palavra `throws` indica a possib
 
 ### Ex 10
 #### Que característica uma classe deve ter para que suas instâncias possam ser lançadas?  
+
+
+### Ex 11
+#### Quais as diferenças que existem entre as exceções verificadas e não verificadas?
+As exceções verificadas são as que o compilador obriga quem chama o método ou construtor a tratar a exceção.  
+As não verificadas o compilador não força quem chamou o método/construtor a tratar a `Exception`.
