@@ -24,7 +24,7 @@ Os tipos genéricos dão maior estabilidade para o código, permite a detecção
 ### Ex 2
 #### Considere o cenário em que uma classe qualquer define um atributo de instância, e é esperado que os “clientes/usuários” que manipulam instâncias desta classe sejam capazes tanto de obter o valor atual do atributo, quanto de alterá-lo. Por que, mesmo neste caso, é recomendável proteger o atributo, tornando-o privado, e definir getters e setters para o atributo em questão?  
 Tornar um atributo privado faz com que apenas a classe que declara esse atributo tenha o poder de fazer modificações nele. Isso facilita muito a implementação de mudanças, é o _encapsulamento_ dos membros de uma classe. O uso de métodos `get`e `set` é a forma pela qual iremos acessar ou mudar o valor do atributo fora dessa classe. 
-Essa forma de implementação em que os atributos são privados e os métodos são públicos (_interface da classe_, como nos comunicamos com os objetos dessa classe) é muito comum, dessa forma, se tivermos que fazer alguma alteração com relação ao atributo privado não precisamos ir em todos os lugares do código em que esse atributo foi utilizado para adaptar, basta alterarmos os métodos `get` e `set`.
+Essa forma de implementação em que os atributos são privados e os métodos são públicos (_interface da classe_, como nos comunicamos com os objetos dessa classe) é muito comum. Dessa forma, se tivermos que fazer alguma alteração com relação ao atributo privado, não precisamos ir em todos os lugares do código em que esse atributo foi utilizado para adaptar, basta alterarmos os métodos `get` e `set` da classe que os implementa.
 
 > PROGRAMANDO VOLTADO À INTERFACE, E NÃO À IMPLEMENTAÇÃO  
 > É sempre bom programar pensando na interface da sua classe, em como seus usuários estarão utilizando-a, e não somente em como ela funcionará.  
@@ -134,9 +134,39 @@ A palavra `throw` lança uma `Exception`, já a palavra `throws` indica a possib
 
 ### Ex 10
 #### Que característica uma classe deve ter para que suas instâncias possam ser lançadas?  
-
+Ela deve ser uma extensão de uma das classes lançáveis (`throwable`)
 
 ### Ex 11
 #### Quais as diferenças que existem entre as exceções verificadas e não verificadas?
 As exceções verificadas são as que o compilador obriga quem chama o método ou construtor a tratar a exceção.  
 As não verificadas o compilador não força quem chamou o método/construtor a tratar a `Exception`.
+
+### Ex 12
+#### Imagine que você está trabalhando no desenvolvimento de uma biblioteca que encapsula um determinado conjunto de funcionalidades, a serem usadas por um outro grupo de desenvolvedores. Suponha que um dos métodos, de uma das classes desta biblioteca, só deve executar determinada ação se uma condição for satisfeita, e caso a condição não seja satisfeita uma exceção é lançada como forma de sinalizar ao usuário da classe/método que algo de errado aconteceu. Para cada possibilidade, listada nos itens (a), (b) e (c), referente ao tipo de exceção a ser lançada, discuta como ela afeta o lado dos desenvolvedores-usuários da biblioteca, e qual delas você escolheria usar:
+a) lançar uma instância do tipo `Exception`.
+    Uma instância do tipo `Exception` é bastante genérica, não deixa claro que tipo de exceção é, pode ser uma `RuntimeException` ou `IOException`, os desenvolvedores e usuários teriam que pesquisar e estudar para entender o porquê dessa exceção ser lançada.
+b) lançar uma instância de uma classe desenvolvida por você que estenda `Exception`.
+    Essa opção é melhor, do que a anterior. O tipo de exceção ainda é genérico, mas podemos colocar no corpo da classe um retorno explicativo para os desenvolvedores e usuários encontrarem com mais facilidade a raiz do problema.
+c) lançar uma instância de uma classe desenvolvida por você que estenda `RuntimeException`.
+    Entendo essa como a melhor opção. Ela tem as vantagens de poder escrever no corpo da classe informações sobre o motivo da exceção e também reduz um pouco o escopo de exceções, deixa a exceção menos genérica para os desenvolvedores e usuários.
+
+### Ex 13
+#### Implemente uma Fila genérica que capaz de armazenar objetos de qualquer tipo. A classe Fila deve implementar o método adiciona, para a inserção de elementos, o método remove, para a remoção, e o método tamanho que devolve a quantidade de elementos armazenados. Internamente, sua classe deve usar um vetor (array) para armazenar os objetos contidos na fila.
+
+### Ex Extra
+#### Escreva um método genérico eficiente que recebe um vetor (*array*) de elementos do tipo genérico `T` (no qual espera-se que elementos considerados iguais apareçam repetidas vezes) e determine o número total de ocorrências de cada elemento distinto. Para cada elemento distinto seu método deve imprimir uma linha, na saída padrão, com formato `"ELEMENTO: NUMERO_DE_OCORRÊNCIAS"`
+    public static <T> void printCounter(ArrayList <T> elementos) {
+        HashMap<T, Integer> map = new HashMap<T, Integer>();
+
+        for(T elemento: elementos) {
+            if (!map.containsKey(elemento)) {
+                map.put(elemento, 1);
+            } else {
+                map.put(elemento, map.get(elemento)+1);
+            }
+        }
+
+        for (Map.Entry<T, Integer> set: map.entrySet()) {
+            System.out.println(set.getKey() + ": " + set.getValue());
+        }
+    }
