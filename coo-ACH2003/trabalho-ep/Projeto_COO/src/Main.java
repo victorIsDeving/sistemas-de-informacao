@@ -171,12 +171,12 @@ class Background {
 	double count;
 
 	Background (int arraySize, double speed, double count) {
-		x = new double[arraySize];
-		y = new double[arraySize];
+		this.x = new double[arraySize];
+		this.y = new double[arraySize];
 		this.speed = speed;
 		this.count = count;
 
-		for(int i = 0; i < this.x.length; i++){
+		for(int i = 0; i < arraySize; i++){
 			
 			this.x[i] = Math.random() * GameLib.WIDTH;
 			this.y[i] = Math.random() * GameLib.HEIGHT;
@@ -674,7 +674,7 @@ public class Main {
 			
 			for(int i = 0; i < background2.x.length; i++){
 				
-				GameLib.fillRect(background2.x[i], (background2.x[i] + background2.count) % GameLib.HEIGHT, 2, 2);
+				GameLib.fillRect(background2.x[i], (background2.y[i] + background2.count) % GameLib.HEIGHT, 2, 2);
 			}
 			
 			/* desenhando plano de fundo próximo */
@@ -684,7 +684,7 @@ public class Main {
 			
 			for(int i = 0; i < background1.x.length; i++){
 				
-				GameLib.fillRect(background1.x[i], (background1.yY[i] + background1.count) % GameLib.HEIGHT, 3, 3);
+				GameLib.fillRect(background1.x[i], (background1.y[i] + background1.count) % GameLib.HEIGHT, 3, 3);
 			}
 						
 			/* desenhando player */
