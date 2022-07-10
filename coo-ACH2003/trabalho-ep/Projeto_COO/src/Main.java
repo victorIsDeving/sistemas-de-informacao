@@ -110,22 +110,31 @@ class Player {
 }
 
 class EnemyBasic {
-	int [] state = new int[10];					// estados
-	double [] cord_X = new double[10];					// coordenadas x
-	double [] cord_Y = new double[10];					// coordenadas y
-	double [] speed = new double[10];					// velocidades
-	double [] angle = new double[10];				// ângulos (indicam direção do movimento)
-	double [] rotation_speed = new double[10];					// velocidades de rotação
-	double [] explosion_start = new double[10];			// instantes dos inícios das explosões
-	double [] explosion_end = new double[10];			// instantes dos finais da explosões
-	long [] next_shot = new long[10];				// instantes do próximo tiro
+	int [] state;					// estados
+	double [] cord_X;					// coordenadas x
+	double [] cord_Y;					// coordenadas y
+	double [] speed;					// velocidades
+	double [] angle;				// ângulos (indicam direção do movimento)
+	double [] rotation_speed;					// velocidades de rotação
+	double [] explosion_start;			// instantes dos inícios das explosões
+	double [] explosion_end;			// instantes dos finais da explosões
+	long [] next_shot;				// instantes do próximo tiro
 	double radius;						// raio (tamanho do inimigo)
 	long next_enemy;					// instante em que um novo inimigo deve aparecer
 
-	EnemyBasic (int state, double radius, long nextEnemy) {
+	EnemyBasic (int arraysSize, int state, double radius, long nextEnemy) {
+		this.state = new int[arraysSize];
+		this.cord_X = new double[arraysSize];
+		this.cord_Y = new double[arraysSize];
+		this.speed = new double[arraysSize];
+		this.angle = new double[arraysSize];
+		this.rotation_speed = new double[arraysSize];
+		this.explosion_start = new double[arraysSize];
+		this.explosion_end = new double[arraysSize];
+		this.next_shot = new long[arraysSize];
 		this.radius = radius;
 		this.next_enemy = nextEnemy;
-		for(int i = 0; i < this.state.length; i++) this.state[i] = state;
+		for(int i = 0; i < arraysSize; i++) this.state[i] = state;
 	}
 }
 
@@ -133,8 +142,8 @@ class EnemyArmada extends EnemyBasic {
 	double spawn_X;				// coordenada x do próximo inimigo tipo 2 a aparecer
 	int count;							// contagem de inimigos tipo 2 (usada na "formação de voo")
 	
-	EnemyArmada (int state, double radius, long nextEnemy, double spawnX, int enemyCount) {
-		super(state, radius, nextEnemy);
+	EnemyArmada (int arraysSize, int state, double radius, long nextEnemy, double spawnX, int enemyCount) {
+		super(arraysSize, state, radius, nextEnemy);
 		spawn_X = spawnX;
 		count = enemyCount;
 	}
@@ -142,14 +151,20 @@ class EnemyArmada extends EnemyBasic {
 
 class ProjectileBasic {
 	
-	int [] states = new int[10];					// estados
-	double [] cord_X = new double[10];				// coordenadas x
-	double [] cord_Y = new double[10];				// coordenadas y
-	double [] speed_X = new double[10];				// velocidades no eixo x
-	double [] speed_Y = new double[10];				// velocidades no eixo y
+	int [] states;					// estados
+	double [] cord_X;				// coordenadas x
+	double [] cord_Y;				// coordenadas y
+	double [] speed_X;				// velocidades no eixo x
+	double [] speed_Y;				// velocidades no eixo y
 
-	ProjectileBasic (int states) {
-		for(int i = 0; i < this.states.length; i++) this.states[i] = states;
+	ProjectileBasic (int arraysSize, int states) {
+		this.states = new int[arraysSize];
+		this.cord_X = new double[arraysSize];
+		this.cord_Y = new double[arraysSize];
+		this.speed_X = new double[arraysSize];
+		this.speed_Y = new double[arraysSize];
+		
+		for(int i = 0; i < arraysSize; i++) this.states[i] = states;
 	}
 }
 
@@ -157,8 +172,8 @@ class ProjectileRadius extends ProjectileBasic {
 
 	double radius;					// raio (tamanho dos projéteis inimigos)
 
-	ProjectileRadius (int states, double radius) {
-		super(states);
+	ProjectileRadius (int arraysSize, int states, double radius) {
+		super(arraysSize, states);
 		this.radius = radius;
 	} 
 }
@@ -256,16 +271,16 @@ public class Main {
 		Player player = new Player(ACTIVE, GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, 0.25, 0.25, 12.0, currentTime);
 
 		/* variáveis dos projéteis disparados pelo player */
-		ProjectileBasic player_projectile = new ProjectileBasic(INACTIVE);
+		ProjectileBasic player_projectile = new ProjectileBasic(10, INACTIVE);
 
 		/* variáveis dos inimigos tipo 1 */
-		EnemyBasic enemy1 = new EnemyBasic(INACTIVE, 9.0, currentTime+2000);
+		EnemyBasic enemy1 = new EnemyBasic(10, INACTIVE, 9.0, currentTime+2000);
 
 		/* variáveis dos inimigos tipo 2 */
-		EnemyArmada enemy2 = new EnemyArmada(INACTIVE, 12.0, currentTime+7000, GameLib.WIDTH * 0.20, 0);
+		EnemyArmada enemy2 = new EnemyArmada(10, INACTIVE, 12.0, currentTime+7000, GameLib.WIDTH*0.20, 0);
 	
 		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, quanto tipo 2) */
-		ProjectileRadius enemy_projectile = new ProjectileRadius(INACTIVE, 2.0);
+		ProjectileRadius enemy_projectile = new ProjectileRadius(10, INACTIVE, 2.0);
 		
 		/* estrelas que formam o fundo de primeiro plano */
 		Background background1 = new Background(20, 0.070, 0.0);
