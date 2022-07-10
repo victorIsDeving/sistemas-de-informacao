@@ -81,20 +81,12 @@ class Player {
 		return this.explosion_end;
 	}
 
-	//setter/getter speed X
-	public void setVX(double speedX) {
-		this.speed_X = speedX;
-	}
-
+	//getter speed X
 	public double getVX() {
 		return this.speed_X;
 	}
 
-	//setter/getter speed Y
-	public void setVY(double speedY) {
-		this.speed_Y = speedY;
-	}
-
+	//getter speed Y
 	public double getVY() {
 		return this.speed_Y;
 	}
