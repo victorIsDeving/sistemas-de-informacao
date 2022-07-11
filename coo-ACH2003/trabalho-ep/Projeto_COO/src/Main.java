@@ -10,6 +10,44 @@ import java.awt.Color;
 /*                                                                     */
 /***********************************************************************/
 
+// class Basics {
+
+// 	/* Encontra e devolve o primeiro índice do  */
+// 	/* array referente a uma posição "inativa". */
+// 	public static int findFreeIndex(int [] stateArray){
+// 		int i;
+// 		for(i = 0; i < stateArray.length; i++){			
+// 			if(stateArray[i] == INACTIVE) break;
+// 		}
+		
+// 		return i;
+// 	} 
+
+// 	/* Encontra e devolve o conjunto de índices (a quantidade */
+// 	/* de índices é defnida através do parâmetro "amount") do */
+// 	/* array referente a posições "inativas".                 */ 
+
+// 	public static int [] findFreeIndexes(int [] stateArray, int amount){
+
+// 		int i, k;
+// 		int [] freeArray = new int[amount];
+
+// 		for(i = 0; i < freeArray.length; i++) freeArray[i] = stateArray.length; 
+		
+// 		for(i = 0, k = 0; i < stateArray.length && k < amount; i++){
+				
+// 			if(stateArray[i] == INACTIVE) { 
+				
+// 				freeArray[k] = i; 
+// 				k++;
+// 			}
+// 		}
+		
+// 		return freeArray;
+// 	}
+
+// }
+
 class Player {
 	int state;						// estado
 	double cord_X;					// coordenada x
@@ -128,6 +166,7 @@ class EnemyBasic {
 		this.next_enemy = nextEnemy;
 		for(int i = 0; i < arraysSize; i++) this.state[i] = state;
 	}
+
 }
 
 class EnemyArmada extends EnemyBasic {
@@ -138,6 +177,13 @@ class EnemyArmada extends EnemyBasic {
 		super(arraysSize, state, radius, nextEnemy);
 		spawn_X = spawnX;
 		count = enemyCount;
+	}
+}
+
+class EnemyCrab extends EnemyBasic {
+	
+	EnemyCrab (int arraysSize, int state, double radius, long nextEnemy) {
+		super(arraysSize, state, radius, nextEnemy);
 	}
 }
 
@@ -167,7 +213,8 @@ class ProjectileRadius extends ProjectileBasic {
 	ProjectileRadius (int arraysSize, int states, double radius) {
 		super(arraysSize, states);
 		this.radius = radius;
-	} 
+	}
+
 }
 
 class Background {
@@ -270,8 +317,11 @@ public class Main {
 
 		/* variáveis dos inimigos tipo 2 */
 		EnemyArmada enemy2 = new EnemyArmada(10, INACTIVE, 12.0, currentTime+7000, GameLib.WIDTH*0.20, 0);
+
+		/* variáveis dos inimigos tipo 3 */
+		EnemyCrab enemy3 = new EnemyCrab(2, INACTIVE, 12.0, currentTime+7000);
 	
-		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, quanto tipo 2) */
+		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, 2, 3) */
 		ProjectileRadius enemy_projectile = new ProjectileRadius(10, INACTIVE, 2.0);
 		
 		/* estrelas que formam o fundo de primeiro plano */
@@ -368,6 +418,20 @@ public class Main {
 						player.setExplosionEnd(currentTime + 2000);
 					}
 				}
+				
+				for(int i = 0; i < enemy3.state.length; i++){
+					
+					double dx = enemy3.cord_X[i] - player.getCordX();
+					double dy = enemy3.cord_Y[i] - player.getCordY();
+					double dist = Math.sqrt(dx * dx + dy * dy);
+					
+					if(dist < (player.getRadius() + enemy3.radius) * 0.8){
+						
+						player.setState(EXPLODING);
+						player.setExplosionStart(currentTime);
+						player.setExplosionEnd(currentTime + 2000);
+					}
+				}
 			}
 			
 			/* colisões projeteis (player) - inimigos */
@@ -404,6 +468,23 @@ public class Main {
 							enemy2.state[i] = EXPLODING;
 							enemy2.explosion_start[i] = currentTime;
 							enemy2.explosion_end[i] = currentTime + 500;
+						}
+					}
+				}
+				
+				for(int i = 0; i < enemy3.state.length; i++){
+					
+					if(enemy3.state[i] == ACTIVE){
+						
+						double dx = enemy3.cord_X[i] - player_projectile.cord_X[k];
+						double dy = enemy3.cord_Y[i] - player_projectile.cord_Y[k];
+						double dist = Math.sqrt(dx * dx + dy * dy);
+						
+						if(dist < enemy3.radius){
+							
+							enemy3.state[i] = EXPLODING;
+							enemy3.explosion_start[i] = currentTime;
+							enemy3.explosion_end[i] = currentTime + 500;
 						}
 					}
 				}
@@ -453,20 +534,20 @@ public class Main {
 			
 			/* inimigos tipo 1 */
 			
-			for(int i = 0; i < enemy1.state.length; i++){
+			for (int i = 0; i < enemy1.state.length; i++){
 				
-				if(enemy1.state[i] == EXPLODING){
+				if (enemy1.state[i] == EXPLODING){
 					
-					if(currentTime > enemy1.explosion_end[i]){
+					if (currentTime > enemy1.explosion_end[i]){
 						
 						enemy1.state[i] = INACTIVE;
 					}
 				}
 				
-				if(enemy1.state[i] == ACTIVE){
+				if (enemy1.state[i] == ACTIVE){
 					
 					/* verificando se inimigo saiu da tela */
-					if(enemy1.cord_Y[i] > GameLib.HEIGHT + 10) {
+					if (enemy1.cord_Y[i] > GameLib.HEIGHT + 10) {
 						
 						enemy1.state[i] = INACTIVE;
 					}
@@ -476,11 +557,11 @@ public class Main {
 						enemy1.cord_Y[i] += enemy1.speed[i] * Math.sin(enemy1.angle[i]) * delta * (-1.0);
 						enemy1.angle[i] += enemy1.rotation_speed[i] * delta;
 						
-						if(currentTime > enemy1.next_shot[i] && enemy1.cord_Y[i] < player.getCordY()){
+						if (currentTime > enemy1.next_shot[i] && enemy1.cord_Y[i] < player.getCordY()){
 																							
 							int free = findFreeIndex(enemy_projectile.states);
 							
-							if(free < enemy_projectile.states.length){
+							if (free < enemy_projectile.states.length){
 								
 								enemy_projectile.cord_X[free] = enemy1.cord_X[i];
 								enemy_projectile.cord_Y[free] = enemy1.cord_Y[i];
@@ -497,9 +578,9 @@ public class Main {
 			
 			/* inimigos tipo 2 */
 			
-			for(int i = 0; i < enemy2.state.length; i++){
+			for (int i = 0; i < enemy2.state.length; i++){
 				
-				if(enemy2.state[i] == EXPLODING){
+				if (enemy2.state[i] == EXPLODING){
 					
 					if(currentTime > enemy2.explosion_end[i]){
 						
@@ -507,10 +588,10 @@ public class Main {
 					}
 				}
 				
-				if(enemy2.state[i] == ACTIVE){
+				if (enemy2.state[i] == ACTIVE){
 					
 					/* verificando se inimigo saiu da tela */
-					if(	enemy2.cord_X[i] < -10 || enemy2.cord_X[i] > GameLib.WIDTH + 10 ) {
+					if (enemy2.cord_X[i] < -10 || enemy2.cord_X[i] > GameLib.WIDTH + 10 ) {
 						
 						enemy2.state[i] = INACTIVE;
 					}
@@ -525,27 +606,27 @@ public class Main {
 						
 						double threshold = GameLib.HEIGHT * 0.30;
 						
-						if(previousY < threshold && enemy2.cord_Y[i] >= threshold) {
+						if (previousY < threshold && enemy2.cord_Y[i] >= threshold) {
 							
 							if(enemy2.cord_X[i] < GameLib.WIDTH / 2) enemy2.rotation_speed[i] = 0.003;
 							else enemy2.rotation_speed[i] = -0.003;
 						}
 						
-						if(enemy2.rotation_speed[i] > 0 && Math.abs(enemy2.angle[i] - 3 * Math.PI) < 0.05){
+						if (enemy2.rotation_speed[i] > 0 && Math.abs(enemy2.angle[i] - 3 * Math.PI) < 0.05){
 							
 							enemy2.rotation_speed[i] = 0.0;
 							enemy2.angle[i] = 3 * Math.PI;
 							shootNow = true;
 						}
 						
-						if(enemy2.rotation_speed[i] < 0 && Math.abs(enemy2.angle[i]) < 0.05){
+						if (enemy2.rotation_speed[i] < 0 && Math.abs(enemy2.angle[i]) < 0.05){
 							
 							enemy2.rotation_speed[i] = 0.0;
 							enemy2.angle[i] = 0.0;
 							shootNow = true;
 						}
 																		
-						if(shootNow){
+						if (shootNow){
 
 							double [] angles = { Math.PI/2 + Math.PI/8, Math.PI/2, Math.PI/2 - Math.PI/8 };
 							int [] freeArray = findFreeIndex(enemy_projectile.states, angles.length);
@@ -554,7 +635,7 @@ public class Main {
 								
 								int free = freeArray[k];
 								
-								if(free < enemy_projectile.states.length){
+								if (free < enemy_projectile.states.length){
 									
 									double a = angles[k] + Math.random() * Math.PI/6 - Math.PI/12;
 									double vx = Math.cos(a);
@@ -566,6 +647,73 @@ public class Main {
 									enemy_projectile.speed_Y[free] = vy * 0.30;
 									enemy_projectile.states[free] = ACTIVE;
 								}
+							}
+						}
+					}
+				}
+			}
+
+			/* inimigos tipo 3 */
+			
+			for(int i = 0; i < enemy3.state.length; i++){
+				
+				if(enemy3.state[i] == EXPLODING){
+					
+					if(currentTime > enemy3.explosion_end[i]){
+						
+						enemy3.state[i] = INACTIVE;
+					}
+				}
+				
+				if (enemy3.state[i] == ACTIVE){
+					
+					/* verificando se inimigo saiu da tela */
+					if (enemy3.cord_Y[i] > GameLib.HEIGHT + 10) {
+						
+						enemy3.state[i] = INACTIVE;
+					} else if ( enemy3.cord_Y[i] >= GameLib.HEIGHT/3 && enemy3.cord_Y[i] <= GameLib.HEIGHT/2 ) {
+
+						if (enemy3.cord_X[i] <= GameLib.WIDTH - enemy3.radius*2) {
+							enemy3.cord_X[i] += 0.75;
+							if (currentTime > enemy3.next_shot[i] && enemy3.cord_Y[i] < player.getCordY()){												
+								int free = findFreeIndex(enemy_projectile.states);
+								
+								if(free < enemy_projectile.states.length){
+									
+									enemy_projectile.cord_X[free] = enemy3.cord_X[i];
+									enemy_projectile.cord_Y[free] = enemy3.cord_Y[i];
+									enemy_projectile.speed_X[free] = Math.cos(enemy3.angle[i]) * 0.45;
+									enemy_projectile.speed_Y[free] = Math.sin(enemy3.angle[i]) * 0.45 * (-1.0);
+									enemy_projectile.states[free] = ACTIVE;
+									
+									enemy3.next_shot[i] = (long) (currentTime + 200 + Math.random() * 500);
+								}
+							}
+						} else {
+							enemy3.cord_X[i] += enemy3.speed[i] * Math.cos(enemy3.angle[i]) * delta;
+							enemy3.cord_Y[i] += enemy3.speed[i] * Math.sin(enemy3.angle[i]) * delta * (-1.0);
+							enemy3.angle[i] += enemy3.rotation_speed[i] * delta;
+						}	
+	
+					} else {
+					
+						enemy3.cord_X[i] += enemy3.speed[i] * Math.cos(enemy3.angle[i]) * delta;
+						enemy3.cord_Y[i] += enemy3.speed[i] * Math.sin(enemy3.angle[i]) * delta * (-1.0);
+						enemy3.angle[i] += enemy3.rotation_speed[i] * delta;
+
+						if (currentTime > enemy3.next_shot[i] && enemy3.cord_Y[i] < player.getCordY()){
+																							
+							int free = findFreeIndex(enemy_projectile.states);
+							
+							if(free < enemy_projectile.states.length){
+								
+								enemy_projectile.cord_X[free] = enemy3.cord_X[i];
+								enemy_projectile.cord_Y[free] = enemy3.cord_Y[i];
+								enemy_projectile.speed_X[free] = Math.cos(enemy3.angle[i]) * 0.45;
+								enemy_projectile.speed_Y[free] = Math.sin(enemy3.angle[i]) * 0.45 * (-1.0);
+								enemy_projectile.states[free] = ACTIVE;
+								
+								enemy3.next_shot[i] = (long) (currentTime + 200 + Math.random() * 500);
 							}
 						}
 					}
@@ -618,6 +766,31 @@ public class Main {
 						enemy2.spawn_X = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
 						enemy2.next_enemy = (long) (currentTime + 3000 + Math.random() * 3000);
 					}
+				}
+			}
+			
+			/* verificando se novos inimigos (tipo 3) devem ser "lançados" */
+			
+			if(currentTime > enemy3.next_enemy){
+				
+				int free = findFreeIndex(enemy3.state);
+								
+				if(free < enemy3.state.length){
+					
+					// if (Math.random() < 0.5) {
+					// 	enemy3.cord_X[free] = enemy3.radius*2;
+					// } else {
+					// 	enemy3.cord_X[free] = GameLib.WIDTH - enemy3.radius*2;
+					// }
+						
+					enemy3.cord_X[free] = enemy3.radius*2;
+					enemy3.cord_Y[free] = -10.0;
+					enemy3.speed[free] = 0.05 + Math.random() * 0.15;
+					enemy3.angle[free] = (3 * Math.PI) / 2;
+					enemy3.rotation_speed[free] = 0.0;
+					enemy3.state[free] = ACTIVE;
+					enemy3.next_shot[free] = currentTime + 500;
+					enemy3.next_enemy = currentTime + 500;
 				}
 			}
 			
@@ -762,6 +935,25 @@ public class Main {
 			
 					GameLib.setColor(Color.MAGENTA);
 					GameLib.drawDiamond(enemy2.cord_X[i], enemy2.cord_Y[i], enemy2.radius);
+				}
+			}
+			
+			/* desenhando inimigos (tipo 3) */
+			
+			for(int i = 0; i < enemy3.state.length; i++){
+				
+				if(enemy3.state[i] == EXPLODING){
+					
+					double alpha = (currentTime - enemy3.explosion_start[i]) / (enemy3.explosion_end[i] - enemy3.explosion_start[i]);
+					GameLib.drawExplosion(enemy3.cord_X[i], enemy3.cord_Y[i], alpha);
+				}
+				
+				if(enemy3.state[i] == ACTIVE){
+					
+					GameLib.setColor(Color.RED);
+					GameLib.drawDiamond(enemy3.cord_X[i], enemy3.cord_Y[i], enemy3.radius);
+					GameLib.setColor(Color.ORANGE);
+					GameLib.drawCircle(enemy3.cord_X[i], enemy3.cord_Y[i], enemy3.radius/2);
 				}
 			}
 			
