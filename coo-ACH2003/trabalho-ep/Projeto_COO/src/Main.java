@@ -10,43 +10,14 @@ import java.awt.Color;
 /*                                                                     */
 /***********************************************************************/
 
-// class Basics {
 
-// 	/* Encontra e devolve o primeiro índice do  */
-// 	/* array referente a uma posição "inativa". */
-// 	public static int findFreeIndex(int [] stateArray){
-// 		int i;
-// 		for(i = 0; i < stateArray.length; i++){			
-// 			if(stateArray[i] == INACTIVE) break;
-// 		}
-		
-// 		return i;
-// 	} 
+interface Projectiles {
+	public static final int INACTIVE = 0;
+	public static final int ACTIVE = 1;
+	public static final int EXPLODING = 2;
 
-// 	/* Encontra e devolve o conjunto de índices (a quantidade */
-// 	/* de índices é defnida através do parâmetro "amount") do */
-// 	/* array referente a posições "inativas".                 */ 
-
-// 	public static int [] findFreeIndexes(int [] stateArray, int amount){
-
-// 		int i, k;
-// 		int [] freeArray = new int[amount];
-
-// 		for(i = 0; i < freeArray.length; i++) freeArray[i] = stateArray.length; 
-		
-// 		for(i = 0, k = 0; i < stateArray.length && k < amount; i++){
-				
-// 			if(stateArray[i] == INACTIVE) { 
-				
-// 				freeArray[k] = i; 
-// 				k++;
-// 			}
-// 		}
-		
-// 		return freeArray;
-// 	}
-
-// }
+	public void statesUpdate(long deltaTime, int screenEnd);
+}
 
 class Player {
 	int state;						// estado
@@ -187,8 +158,8 @@ class EnemyCrab extends EnemyBasic {
 	}
 }
 
-class ProjectileBasic {
-	
+class ProjectileBasic implements Projectiles {
+
 	int [] states;					// estados
 	double [] cord_X;				// coordenadas x
 	double [] cord_Y;				// coordenadas y
@@ -204,6 +175,20 @@ class ProjectileBasic {
 		
 		for(int i = 0; i < arraysSize; i++) this.states[i] = states;
 	}
+
+	public void statesUpdate(long deltaTime, int screenEnd) {
+		for(int i = 0; i < this.states.length; i++){	
+			if(this.states[i] == ACTIVE){
+				/* verificando se projétil saiu da tela */
+				if(this.cord_Y[i] < screenEnd) {
+					this.states[i] = INACTIVE;
+				} else {
+					this.cord_X[i] += this.speed_X[i] * deltaTime;
+					this.cord_Y[i] += this.speed_Y[i] * deltaTime;
+				}
+			}
+		}
+	}
 }
 
 class ProjectileRadius extends ProjectileBasic {
@@ -215,6 +200,20 @@ class ProjectileRadius extends ProjectileBasic {
 		this.radius = radius;
 	}
 
+	public void statesUpdate(long deltaTime, int screenEnd) {
+		for(int i = 0; i < this.states.length; i++){
+			if(this.states[i] == ACTIVE){
+				/* verificando se projétil saiu da tela */
+				if(this.cord_Y[i] > screenEnd) {	
+					this.states[i] = INACTIVE;
+				}
+				else {
+					this.cord_X[i] += this.speed_X[i] * deltaTime;
+					this.cord_Y[i] += this.speed_Y[i] * deltaTime;
+				}
+			}
+		}
+	}
 }
 
 class Background {
@@ -495,42 +494,10 @@ public class Main {
 			/***************************/
 			
 			/* projeteis (player) */
-			
-			for(int i = 0; i < player_projectile.states.length; i++){
-				
-				if(player_projectile.states[i] == ACTIVE){
-					
-					/* verificando se projétil saiu da tela */
-					if(player_projectile.cord_Y[i] < 0) {
-						
-						player_projectile.states[i] = INACTIVE;
-					}
-					else {
-					
-						player_projectile.cord_X[i] += player_projectile.speed_X[i] * delta;
-						player_projectile.cord_Y[i] += player_projectile.speed_Y[i] * delta;
-					}
-				}
-			}
+			player_projectile.statesUpdate(delta, 0);
 			
 			/* projeteis (inimigos) */
-			
-			for(int i = 0; i < enemy_projectile.states.length; i++){
-				
-				if(enemy_projectile.states[i] == ACTIVE){
-					
-					/* verificando se projétil saiu da tela */
-					if(enemy_projectile.cord_Y[i] > GameLib.HEIGHT) {
-						
-						enemy_projectile.states[i] = INACTIVE;
-					}
-					else {
-					
-						enemy_projectile.cord_X[i] += enemy_projectile.speed_X[i] * delta;
-						enemy_projectile.cord_Y[i] += enemy_projectile.speed_Y[i] * delta;
-					}
-				}
-			}
+			enemy_projectile.statesUpdate(delta, GameLib.HEIGHT);
 			
 			/* inimigos tipo 1 */
 			
