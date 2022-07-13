@@ -22,13 +22,14 @@ interface Projectiles {
 class Player {
 	int state;						// estado
 	double cord_X;					// coordenada x
-	double cord_Y;				   // coordenada y
-	double speed_X;						// velocidade no eixo x
-	double speed_Y;						// velocidade no eixo y
-	double radius;						// raio (tamanho aproximado do player)	
-	double explosion_start = 0;					// instante do início da explosão
-	double explosion_end = 0;					// instante do final da explosão
+	double cord_Y;				    // coordenada y
+	double speed_X;					// velocidade no eixo x
+	double speed_Y;					// velocidade no eixo y
+	double radius;					// raio (tamanho aproximado do player)	
+	double explosion_start = 0;		// instante do início da explosão
+	double explosion_end = 0;		// instante do final da explosão
 	long next_shot;					// instante a partir do qual pode haver um próximo tiro
+	int power_up_state;				// estado do power up
 
 	Player (int initState, double cordX, double cordY, double speedX, double speedY, double radius, long nextShot){
 		this.state = initState;
@@ -108,6 +109,16 @@ class Player {
 	public long getNextShot() {
 		return this.next_shot;
 	}
+
+	//setter/getter power up
+	public void setPowerUpState(int powerUp) {
+		this.power_up_state = powerUp;
+	}
+
+	public int getPowerUpState() {
+		return this.power_up_state;
+	}
+
 }
 
 class EnemyBasic {
@@ -142,7 +153,7 @@ class EnemyBasic {
 
 class EnemyArmada extends EnemyBasic {
 	double spawn_X;				// coordenada x do próximo inimigo tipo 2 a aparecer
-	int count;							// contagem de inimigos tipo 2 (usada na "formação de voo")
+	int count;					// contagem de inimigos tipo 2 (usada na "formação de voo")
 	
 	EnemyArmada (int arraysSize, int state, double radius, long nextEnemy, double spawnX, int enemyCount) {
 		super(arraysSize, state, radius, nextEnemy);
@@ -213,6 +224,54 @@ class ProjectileRadius extends ProjectileBasic {
 				}
 			}
 		}
+	}
+}
+
+class PowerUp {
+	int [] state;					// estados
+	double [] cord_X;					// coordenadas x
+	double [] cord_Y;					// coordenadas y
+	double [] speed;					// velocidades
+	double [] angle;				// ângulos (indicam direção do movimento)
+	double [] rotation_speed;					// velocidades de rotação
+	double [] explosion_start;			// instantes dos inícios das explosões
+	double [] explosion_end;			// instantes dos finais da explosões
+	double radius;						// raio (tamanho)
+	long next_power_up;					// instante em que um novo inimigo deve aparecer
+	long power_up_start = 0;		// instante do início do power up
+	long power_up_end = 0;		// instante do final do power up
+
+	PowerUp (int arraysSize, int state, double radius, long nextPowerUp) {
+		this.state = new int[arraysSize];
+		this.cord_X = new double[arraysSize];
+		this.cord_Y = new double[arraysSize];
+		this.speed = new double[arraysSize];
+		this.angle = new double[arraysSize];
+		this.rotation_speed = new double[arraysSize];
+		this.explosion_start = new double[arraysSize];
+		this.explosion_end = new double[arraysSize];
+		this.radius = radius;
+		this.next_power_up = nextPowerUp;
+
+		for(int i = 0; i < arraysSize; i++) this.state[i] = state;
+	}
+	
+	//setter/getter power up start
+	public void setPowerUpStart(long powerUpStart) {
+		this.power_up_start = powerUpStart;
+	}
+
+	public long getPowerUpStart() {
+		return this.power_up_start;
+	}
+
+	//setter/getter power up end
+	public void setPowerUpEnd(long powerUpEnd) {
+		this.power_up_end = powerUpEnd;
+	}
+
+	public long getPowerUpEnd() {
+		return this.power_up_end;
 	}
 }
 
@@ -313,12 +372,12 @@ public class Main {
 
 		/* variáveis dos inimigos tipo 1 */
 		EnemyBasic enemy1 = new EnemyBasic(10, INACTIVE, 9.0, currentTime+2000);
-
+		
 		/* variáveis dos inimigos tipo 2 */
 		EnemyArmada enemy2 = new EnemyArmada(10, INACTIVE, 12.0, currentTime+7000, GameLib.WIDTH*0.20, 0);
 
 		/* variáveis dos inimigos tipo 3 */
-		EnemyCrab enemy3 = new EnemyCrab(2, INACTIVE, 12.0, currentTime+7000);
+		EnemyCrab enemy3 = new EnemyCrab(2, INACTIVE, 12.0, currentTime+3000);
 	
 		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, 2, 3) */
 		ProjectileRadius enemy_projectile = new ProjectileRadius(10, INACTIVE, 2.0);
@@ -328,7 +387,10 @@ public class Main {
 		
 		/* estrelas que formam o fundo de segundo plano */
 		Background background2 = new Background(50, 0.045, 0.0);
-						
+		
+		/* variáveis dos inimigos tipo 1 */
+		PowerUp power_up1 = new PowerUp(1, INACTIVE, 9.0, currentTime+20000);
+
 		/* iniciado interface gráfica */
 		
 		GameLib.initGraphics();
@@ -381,10 +443,13 @@ public class Main {
 					double dist = Math.sqrt(dx * dx + dy * dy);
 					
 					if(dist < (player.getRadius() + enemy_projectile.radius) * 0.8){
-						
-						player.setState(EXPLODING);
-						player.setExplosionStart(currentTime);
-						player.setExplosionEnd(currentTime + 2000);
+						if (player.getPowerUpState() == ACTIVE) {
+							enemy_projectile.states[i] = INACTIVE;
+						} else {
+							player.setState(EXPLODING);
+							player.setExplosionStart(currentTime);
+							player.setExplosionEnd(currentTime + 2000);
+						}
 					}
 				}
 			
@@ -397,10 +462,15 @@ public class Main {
 					double dist = Math.sqrt(dx * dx + dy * dy);
 					
 					if(dist < (player.getRadius() + enemy1.radius) * 0.8){
-						
-						player.setState(EXPLODING);
-						player.setExplosionStart(currentTime);
-						player.setExplosionEnd(currentTime + 2000);
+						if (player.getPowerUpState() == ACTIVE) {
+							enemy1.state[i] = EXPLODING;
+							enemy1.explosion_start[i] = currentTime;
+							enemy1.explosion_end[i] = currentTime + 500;
+						} else {
+							player.setState(EXPLODING);
+							player.setExplosionStart(currentTime);
+							player.setExplosionEnd(currentTime + 2000);
+						}
 					}
 				}
 				
@@ -411,10 +481,15 @@ public class Main {
 					double dist = Math.sqrt(dx * dx + dy * dy);
 					
 					if(dist < (player.getRadius() + enemy2.radius) * 0.8){
-						
-						player.setState(EXPLODING);
-						player.setExplosionStart(currentTime);
-						player.setExplosionEnd(currentTime + 2000);
+						if (player.getPowerUpState() == ACTIVE) {
+							enemy2.state[i] = EXPLODING;
+							enemy2.explosion_start[i] = currentTime;
+							enemy2.explosion_end[i] = currentTime + 500;
+						} else {
+							player.setState(EXPLODING);
+							player.setExplosionStart(currentTime);
+							player.setExplosionEnd(currentTime + 2000);
+						}
 					}
 				}
 				
@@ -425,10 +500,35 @@ public class Main {
 					double dist = Math.sqrt(dx * dx + dy * dy);
 					
 					if(dist < (player.getRadius() + enemy3.radius) * 0.8){
+						if (player.getPowerUpState() == ACTIVE) {
+							enemy3.state[i] = EXPLODING;
+							enemy3.explosion_start[i] = currentTime;
+							enemy3.explosion_end[i] = currentTime + 500;
+						} else {
+							player.setState(EXPLODING);
+							player.setExplosionStart(currentTime);
+							player.setExplosionEnd(currentTime + 2000);
+						}
+					}
+				}
+	
+				/* colisões player - power up */
+				
+				for(int i = 0; i < power_up1.state.length; i++){
+		
+					double dx = power_up1.cord_X[i] - player.getCordX();
+					double dy = power_up1.cord_Y[i] - player.getCordY();
+					double dist = Math.sqrt(dx * dx + dy * dy);
+					
+					if(dist < (player.getRadius() + power_up1.radius) * 0.8){
 						
-						player.setState(EXPLODING);
-						player.setExplosionStart(currentTime);
-						player.setExplosionEnd(currentTime + 2000);
+						power_up1.state[i] = (EXPLODING);
+						power_up1.explosion_start[i] = currentTime;
+						power_up1.explosion_end[i] = currentTime + 1000;
+						
+						player.setPowerUpState(ACTIVE);
+						power_up1.setPowerUpStart(currentTime);
+						power_up1.setPowerUpEnd(currentTime + 5000);
 					}
 				}
 			}
@@ -687,6 +787,30 @@ public class Main {
 				}
 			}
 			
+			/* power ups */
+			
+			for (int i = 0; i < power_up1.state.length; i++){
+				
+				if (power_up1.state[i] == EXPLODING){
+					if (currentTime > power_up1.explosion_end[i]){
+						power_up1.state[i] = INACTIVE;
+					}
+				}
+				if (power_up1.state[i] == ACTIVE){
+					/* verificando se power up saiu da tela */
+					if (power_up1.cord_Y[i] > GameLib.HEIGHT + 10) {
+						power_up1.state[i] = INACTIVE;
+					} else {
+						power_up1.cord_X[i] += power_up1.speed[i] * Math.cos(power_up1.angle[i]) * delta;
+						power_up1.cord_Y[i] += power_up1.speed[i] * Math.sin(power_up1.angle[i]) * delta * (-1.0);
+						power_up1.angle[i] += power_up1.rotation_speed[i] * delta;
+					}
+				}
+				if (currentTime > power_up1.power_up_end){
+					player.power_up_state = INACTIVE;
+				}
+			}
+			
 			/* verificando se novos inimigos (tipo 1) devem ser "lançados" */
 			
 			if(currentTime > enemy1.next_enemy){
@@ -742,14 +866,7 @@ public class Main {
 				
 				int free = findFreeIndex(enemy3.state);
 								
-				if(free < enemy3.state.length){
-					
-					// if (Math.random() < 0.5) {
-					// 	enemy3.cord_X[free] = enemy3.radius*2;
-					// } else {
-					// 	enemy3.cord_X[free] = GameLib.WIDTH - enemy3.radius*2;
-					// }
-						
+				if(free < enemy3.state.length){						
 					enemy3.cord_X[free] = enemy3.radius*2;
 					enemy3.cord_Y[free] = -10.0;
 					enemy3.speed[free] = 0.05 + Math.random() * 0.15;
@@ -758,6 +875,24 @@ public class Main {
 					enemy3.state[free] = ACTIVE;
 					enemy3.next_shot[free] = currentTime + 500;
 					enemy3.next_enemy = currentTime + 500;
+				}
+			}	
+		
+			/* verificando se power ups devem ser "lançados" */
+			
+			if(currentTime > power_up1.next_power_up){
+				
+				int free = findFreeIndex(power_up1.state);
+								
+				if(free < power_up1.state.length){
+					
+					power_up1.cord_X[free] = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
+					power_up1.cord_Y[free] = -10.0;
+					power_up1.speed[free] = 0.20 + Math.random() * 0.15;
+					power_up1.angle[free] = (3 * Math.PI) / 2;
+					power_up1.rotation_speed[free] = 0.0;
+					power_up1.state[free] = ACTIVE;
+					power_up1.next_power_up = currentTime + 10000;
 				}
 			}
 			
@@ -921,6 +1056,25 @@ public class Main {
 					GameLib.drawDiamond(enemy3.cord_X[i], enemy3.cord_Y[i], enemy3.radius);
 					GameLib.setColor(Color.ORANGE);
 					GameLib.drawCircle(enemy3.cord_X[i], enemy3.cord_Y[i], enemy3.radius/2);
+				}
+			}
+			
+			/* desenhando power ups */
+			
+			for(int i = 0; i < power_up1.state.length; i++){
+				
+				if(power_up1.state[i] == EXPLODING){
+					
+					double alpha = (currentTime - power_up1.explosion_start[i]) / (power_up1.explosion_end[i] - power_up1.explosion_start[i]);
+					GameLib.drawExplosion(power_up1.cord_X[i], power_up1.cord_Y[i], alpha);
+				}
+				
+				if(power_up1.state[i] == ACTIVE){
+					
+					GameLib.setColor(Color.PINK);
+					GameLib.drawDiamond(power_up1.cord_X[i], power_up1.cord_Y[i], power_up1.radius);
+					GameLib.setColor(Color.GREEN);
+					GameLib.drawDiamond(power_up1.cord_X[i], power_up1.cord_Y[i], power_up1.radius/2);
 				}
 			}
 			
