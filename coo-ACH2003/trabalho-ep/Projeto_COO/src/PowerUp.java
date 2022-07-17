@@ -83,7 +83,7 @@ public class PowerUp extends Basics {
 		}
 	}
 
-	public void statesUpdate(int screenSize, int i) {
+	public void statesUpdate(int screenSize, int i, long delta) {
 		if (this.cord_Y[i] > screenSize + 10) {
 			this.state[i] = INACTIVE;
 		} else {

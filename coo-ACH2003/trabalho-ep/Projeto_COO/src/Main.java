@@ -344,7 +344,7 @@ public class Main extends Basics{
 				}
 				if (power_up1.state[i] == ACTIVE){
 					/* verificando se power up saiu da tela */
-					power_up1.statesUpdate(GameLib.HEIGHT, i);
+					power_up1.statesUpdate(GameLib.HEIGHT, i, delta);
 				}
 				if (currentTime > power_up1.power_up_end){
 					player.setPowerUpState(INACTIVE);
