@@ -58,7 +58,7 @@ public class Main extends Basics{
 		Background background2 = new Background(50, 0.045, 0.0);
 		
 		/* variáveis dos inimigos tipo 1 */
-		PowerUp power_up1 = new PowerUp(1, INACTIVE, 9.0, currentTime+20000);
+		PowerUp power_up1 = new PowerUp(1, INACTIVE, 9.0, currentTime+100);
 
 		/* iniciado interface gráfica */
 		
@@ -295,8 +295,7 @@ public class Main extends Basics{
 					if (enemy2.cord_X[i] < -10 || enemy2.cord_X[i] > GameLib.WIDTH + 10 ) {
 						
 						enemy2.state[i] = INACTIVE;
-					}
-					else {
+					} else {
 						enemy2.shooting(currentTime, delta, i, enemy_projectile, player);
 					}
 				}
@@ -341,9 +340,7 @@ public class Main extends Basics{
 			for (int i = 0; i < power_up1.state.length; i++){
 				
 				if (power_up1.state[i] == EXPLODING){
-					if (currentTime > power_up1.explosion_end[i]){
-						power_up1.state[i] = INACTIVE;
-					}
+					power_up1.state[i] = INACTIVE;
 				}
 				if (power_up1.state[i] == ACTIVE){
 					/* verificando se power up saiu da tela */
