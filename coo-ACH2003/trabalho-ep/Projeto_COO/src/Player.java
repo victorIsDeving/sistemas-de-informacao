@@ -1,6 +1,6 @@
 import java.awt.Color;
 
-public class Player implements Basics{
+public class Player extends Basics{
     int state;						// estado
 	double cord_X;					// coordenada x
 	double cord_Y;				    // coordenada y
@@ -113,16 +113,20 @@ public class Player implements Basics{
 		if(keyRight) this.setCordX(this.getCordX() + delta * this.getVX());
 	}
 
-	public void shooting(int free, ProjectileBasic playerProjectile, long currentTime) {
-		if(free < playerProjectile.states.length){
-							
-			playerProjectile.cord_X[free] = this.getCordX();
-			playerProjectile.cord_Y[free] = this.getCordY() - 2 * this.getRadius();
-			playerProjectile.speed_X[free] = 0.0;
-			playerProjectile.speed_Y[free] = -1.0;
-			playerProjectile.states[free] = ACTIVE;
-			this.setNextShot(currentTime+100);
+	public void shooting( ProjectileBasic playerProjectile, long currentTime) {
+		if(currentTime > this.getNextShot()){
+			int free = findFreeIndex(playerProjectile.states);
+			if(free < playerProjectile.states.length){
+								
+				playerProjectile.cord_X[free] = this.getCordX();
+				playerProjectile.cord_Y[free] = this.getCordY() - 2 * this.getRadius();
+				playerProjectile.speed_X[free] = 0.0;
+				playerProjectile.speed_Y[free] = -1.0;
+				playerProjectile.states[free] = ACTIVE;
+				this.setNextShot(currentTime+100);
+			}
 		}
+		
 	}
 
 	public void playerInside(int screenWidth, int screenHeight) { 

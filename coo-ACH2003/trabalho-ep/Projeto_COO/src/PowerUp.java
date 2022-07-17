@@ -1,6 +1,6 @@
 import java.awt.Color;
 
-public class PowerUp implements Basics {
+public class PowerUp extends Basics {
 	int [] state;					// estados
 	double [] cord_X;					// coordenadas x
 	double [] cord_Y;					// coordenadas y
@@ -66,15 +66,20 @@ public class PowerUp implements Basics {
 		}
 	}
 
-	public void lauching(int free, int screenWidth, long currentTime) {				
-		if(free < this.state.length){
-			this.cord_X[free] = Math.random() * (screenWidth - 20.0) + 10.0;
-			this.cord_Y[free] = -10.0;
-			this.speed[free] = 0.20 + Math.random() * 0.15;
-			this.angle[free] = (3 * Math.PI) / 2;
-			this.rotation_speed[free] = 0.0;
-			this.state[free] = ACTIVE;
-			this.next_power_up = currentTime + 10000;
+	public void lauching(int screenWidth, long currentTime) {				
+		if(currentTime > this.next_power_up){
+				
+			int free = findFreeIndex(this.state);
+
+			if(free < this.state.length){
+				this.cord_X[free] = Math.random() * (screenWidth - 20.0) + 10.0;
+				this.cord_Y[free] = -10.0;
+				this.speed[free] = 0.20 + Math.random() * 0.15;
+				this.angle[free] = (3 * Math.PI) / 2;
+				this.rotation_speed[free] = 0.0;
+				this.state[free] = ACTIVE;
+				this.next_power_up = currentTime + 10000;
+			}
 		}
 	}
 

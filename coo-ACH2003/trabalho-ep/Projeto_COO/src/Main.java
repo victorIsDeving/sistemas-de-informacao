@@ -10,14 +10,7 @@ import java.awt.Color;
 /*                                                                     */
 /***********************************************************************/
 
-public class Main {
-	
-	/* Constantes relacionadas aos estados que os elementos   */
-	/* do jogo (player, projeteis ou inimigos) podem assumir. */
-	
-	public static final int INACTIVE = 0;
-	public static final int ACTIVE = 1;
-	public static final int EXPLODING = 2;
+public class Main extends Basics{
 	
 	/* Espera, sem fazer nada, até que o instante de tempo atual seja */
 	/* maior ou igual ao instante especificado no parâmetro "time.    */
@@ -26,45 +19,7 @@ public class Main {
 		
 		while(System.currentTimeMillis() < time) Thread.yield();
 	}
-	
-	/* Encontra e devolve o primeiro índice do  */
-	/* array referente a uma posição "inativa". */
-	
-	public static int findFreeIndex(int [] stateArray){
-		
-		int i;
-		
-		for(i = 0; i < stateArray.length; i++){
-			
-			if(stateArray[i] == INACTIVE) break;
-		}
-		
-		return i;
-	}
-	
-	/* Encontra e devolve o conjunto de índices (a quantidade */
-	/* de índices é defnida através do parâmetro "amount") do */
-	/* array referente a posições "inativas".                 */ 
 
-	public static int [] findFreeIndex(int [] stateArray, int amount){
-
-		int i, k;
-		int [] freeArray = new int[amount];
-
-		for(i = 0; i < freeArray.length; i++) freeArray[i] = stateArray.length; 
-		
-		for(i = 0, k = 0; i < stateArray.length && k < amount; i++){
-				
-			if(stateArray[i] == INACTIVE) { 
-				
-				freeArray[k] = i; 
-				k++;
-			}
-		}
-		
-		return freeArray;
-	}
-	
 	/* Método principal */
 	
 	public static void main(String [] args){
@@ -317,14 +272,7 @@ public class Main {
 					}
 					else {
 						enemy1.moving(delta, i);
-						if (currentTime > enemy1.next_shot[i] && enemy1.cord_Y[i] < player.getCordY()){
-																							
-							int free = findFreeIndex(enemy_projectile.states);
-							
-							if (free < enemy_projectile.states.length){
-								enemy1.shooting(currentTime, free, i, enemy_projectile);
-							}
-						}
+						enemy1.shooting(currentTime, i, enemy_projectile, player);
 					}
 				}
 			}
@@ -349,50 +297,7 @@ public class Main {
 						enemy2.state[i] = INACTIVE;
 					}
 					else {
-						
-						boolean shootNow = false;
-						double previousY = enemy2.cord_Y[i];
-												
-						enemy2.cord_X[i] += enemy2.speed[i] * Math.cos(enemy2.angle[i]) * delta;
-						enemy2.cord_Y[i] += enemy2.speed[i] * Math.sin(enemy2.angle[i]) * delta * (-1.0);
-						enemy2.angle[i] += enemy2.rotation_speed[i] * delta;
-						
-						double threshold = GameLib.HEIGHT * 0.30;
-						
-						if (previousY < threshold && enemy2.cord_Y[i] >= threshold) {
-							
-							if(enemy2.cord_X[i] < GameLib.WIDTH / 2) enemy2.rotation_speed[i] = 0.003;
-							else enemy2.rotation_speed[i] = -0.003;
-						}
-						
-						if (enemy2.rotation_speed[i] > 0 && Math.abs(enemy2.angle[i] - 3 * Math.PI) < 0.05){
-							
-							enemy2.rotation_speed[i] = 0.0;
-							enemy2.angle[i] = 3 * Math.PI;
-							shootNow = true;
-						}
-						
-						if (enemy2.rotation_speed[i] < 0 && Math.abs(enemy2.angle[i]) < 0.05){
-							
-							enemy2.rotation_speed[i] = 0.0;
-							enemy2.angle[i] = 0.0;
-							shootNow = true;
-						}
-																		
-						if (shootNow){
-
-							double [] angles = { Math.PI/2 + Math.PI/8, Math.PI/2, Math.PI/2 - Math.PI/8 };
-							int [] freeArray = findFreeIndex(enemy_projectile.states, angles.length);
-
-							for(int k = 0; k < freeArray.length; k++){
-								
-								int free = freeArray[k];
-								
-								if (free < enemy_projectile.states.length){
-									enemy2.shooting(currentTime, free, k, enemy_projectile);
-								}
-							}
-						}
+						enemy2.shooting(currentTime, delta, i, enemy_projectile, player);
 					}
 				}
 			}
@@ -419,28 +324,14 @@ public class Main {
 
 						if (enemy3.cord_X[i] <= GameLib.WIDTH - enemy3.radius*2) {
 							enemy3.cord_X[i] += 0.75;
-							if (currentTime > enemy3.next_shot[i] && enemy3.cord_Y[i] < player.getCordY()){												
-								int free = findFreeIndex(enemy_projectile.states);
-								
-								if(free < enemy_projectile.states.length){
-									enemy3.shooting(currentTime, free, i, enemy_projectile);
-								}
-							}
+							enemy3.shooting(currentTime, i, enemy_projectile, player);
 						} else {
 							enemy3.moving(delta, i);
 						}	
 	
 					} else {
 						enemy3.moving(delta, i);
-
-						if (currentTime > enemy3.next_shot[i] && enemy3.cord_Y[i] < player.getCordY()){
-																							
-							int free = findFreeIndex(enemy_projectile.states);
-							
-							if(free < enemy_projectile.states.length){
-								enemy3.shooting(currentTime, free, i, enemy_projectile);
-							}
-						}
+						enemy3.shooting(currentTime, i, enemy_projectile, player);
 					}
 				}
 			}
@@ -470,65 +361,16 @@ public class Main {
 			}
 			
 			/* verificando se novos inimigos (tipo 1) devem ser "lançados" */
-			
-			if(currentTime > enemy1.next_enemy){
-				
-				int free = findFreeIndex(enemy1.state);
-								
-				if(free < enemy1.state.length){
-					enemy1.lauching(free, GameLib.WIDTH, currentTime);
-				}
-			}
+			enemy1.lauching( GameLib.WIDTH, currentTime);
 			
 			/* verificando se novos inimigos (tipo 2) devem ser "lançados" */
-			
-			if(currentTime > enemy2.next_enemy){
-				
-				int free = findFreeIndex(enemy2.state);
-								
-				if(free < enemy2.state.length){
-					
-					enemy2.cord_X[free] = enemy2.spawn_X;
-					enemy2.cord_Y[free] = -10.0;
-					enemy2.speed[free] = 0.42;
-					enemy2.angle[free] = (3 * Math.PI) / 2;
-					enemy2.rotation_speed[free] = 0.0;
-					enemy2.state[free] = ACTIVE;
-
-					enemy2.count++;
-					
-					if(enemy2.count < 10){
-						
-						enemy2.next_enemy = currentTime + 120;
-					}
-					else {
-						
-						enemy2.count = 0;
-						enemy2.spawn_X = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
-						enemy2.next_enemy = (long) (currentTime + 3000 + Math.random() * 3000);
-					}
-				}
-			}
+			enemy2.lauching( GameLib.WIDTH, currentTime);
 			
 			/* verificando se novos inimigos (tipo 3) devem ser "lançados" */
-			
-			if(currentTime > enemy3.next_enemy){
-				
-				int free = findFreeIndex(enemy3.state);
-								
-				if(free < enemy3.state.length){
-					enemy3.lauching(free, GameLib.WIDTH, currentTime);				
-				}
-			}	
+			enemy3.lauching(GameLib.WIDTH, currentTime);			
 		
 			/* verificando se power ups devem ser "lançados" */
-			
-			if(currentTime > power_up1.next_power_up){
-				
-				int free = findFreeIndex(power_up1.state);
-
-				power_up1.lauching(free, GameLib.WIDTH, currentTime);
-			}
+			power_up1.lauching(GameLib.WIDTH, currentTime);
 			
 			/* Verificando se a explosão do player já acabou.         */
 			/* Ao final da explosão, o player volta a ser controlável */
@@ -548,10 +390,7 @@ public class Main {
 				player.moving( GameLib.iskeyPressed(GameLib.KEY_UP), GameLib.iskeyPressed(GameLib.KEY_DOWN), GameLib.iskeyPressed(GameLib.KEY_LEFT), GameLib.iskeyPressed(GameLib.KEY_RIGHT), delta );
 				
 				if(GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
-					if(currentTime > player.getNextShot()){
-						int free = findFreeIndex(player_projectile.states);
-						player.shooting(free, player_projectile, currentTime);
-					}	
+					player.shooting( player_projectile, currentTime);
 				}
 			}
 			

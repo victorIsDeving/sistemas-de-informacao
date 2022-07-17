@@ -1,6 +1,6 @@
 import java.awt.Color;
 
-class ProjectileBasic implements Basics {
+class ProjectileBasic extends Basics {
 
 	int [] states;					// estados
 	double [] cord_X;				// coordenadas x
