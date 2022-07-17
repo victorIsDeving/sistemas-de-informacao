@@ -141,7 +141,11 @@ public class Player extends Basics{
 			double alpha = (currentTime - this.getExplosionStart()) / (this.getExplosionEnd() - this.getExplosionStart());
 			GameLib.drawExplosion(this.getCordX(), this.getCordY(), alpha);
 		} else {
-			GameLib.setColor(Color.BLUE);
+			if (this.power_up_state == 1) {
+				GameLib.setColor(Color.YELLOW);
+			} else {
+				GameLib.setColor(Color.BLUE);
+			}
 			GameLib.drawPlayer(this.getCordX(), this.getCordY(), this.getRadius());
 		}
 	}
