@@ -83,4 +83,14 @@ public class PowerUp extends Basics {
 		}
 	}
 
+	public void statesUpdate(int screenSize, int i) {
+		if (this.cord_Y[i] > screenSize + 10) {
+			this.state[i] = INACTIVE;
+		} else {
+			this.cord_X[i] += this.speed[i] * Math.cos(this.angle[i]) * delta;
+			this.cord_Y[i] += this.speed[i] * Math.sin(this.angle[i]) * delta * (-1.0);
+			this.angle[i] += this.rotation_speed[i] * delta;
+		}
+	}
+
 }

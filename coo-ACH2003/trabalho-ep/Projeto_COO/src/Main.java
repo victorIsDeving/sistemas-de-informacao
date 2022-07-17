@@ -344,16 +344,10 @@ public class Main extends Basics{
 				}
 				if (power_up1.state[i] == ACTIVE){
 					/* verificando se power up saiu da tela */
-					if (power_up1.cord_Y[i] > GameLib.HEIGHT + 10) {
-						power_up1.state[i] = INACTIVE;
-					} else {
-						power_up1.cord_X[i] += power_up1.speed[i] * Math.cos(power_up1.angle[i]) * delta;
-						power_up1.cord_Y[i] += power_up1.speed[i] * Math.sin(power_up1.angle[i]) * delta * (-1.0);
-						power_up1.angle[i] += power_up1.rotation_speed[i] * delta;
-					}
+					power_up1.statesUpdate(GameLib.HEIGHT, i);
 				}
 				if (currentTime > power_up1.power_up_end){
-					player.power_up_state = INACTIVE;
+					player.setPowerUpState(INACTIVE);
 				}
 			}
 			
