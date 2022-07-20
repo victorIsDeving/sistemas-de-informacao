@@ -1,21 +1,23 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Background {
-    double [] x;
-	double [] y;
+    ArrayList <Double> x;
+	ArrayList <Double> y;
 	double speed;
 	double count;
 
 	Background (int arraySize, double speed, double count) {
-		this.x = new double[arraySize];
-		this.y = new double[arraySize];
+		this.x = new ArrayList<>(arraySize);
+		this.y = new ArrayList<Double>(arraySize);
 		this.speed = speed;
 		this.count = count;
 
+		// Collections.fill(x, Math.random() * GameLib.WIDTH);
+		// Collections.fill(y, Math.random() * GameLib.WIDTH);
 		for(int i = 0; i < arraySize; i++){
-			
-			this.x[i] = Math.random() * GameLib.WIDTH;
-			this.y[i] = Math.random() * GameLib.HEIGHT;
+			x.add(i, Math.random() * GameLib.WIDTH);
+			y.add(i, Math.random() * GameLib.WIDTH); 
 		}
 	}
 
@@ -23,9 +25,8 @@ public class Background {
 		GameLib.setColor(setColor);
 		this.count += this.speed * delta;
 		
-		for(int i = 0; i < this.x.length; i++){
-			
-			GameLib.fillRect(this.x[i], (this.y[i] + this.count) % screenHeight, j, j);
+		for(int i = 0; i < this.x.size(); i++){
+			GameLib.fillRect(this.x.get(i), (this.y.get(i) + this.count) % screenHeight, j, j);
 		}
 	}
 }
