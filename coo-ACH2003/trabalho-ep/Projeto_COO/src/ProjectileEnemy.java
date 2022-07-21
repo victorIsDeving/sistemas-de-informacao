@@ -15,8 +15,7 @@ public class ProjectileEnemy extends ProjectileBasic {
 				/* verificando se projétil saiu da tela */
 				if(this.cord_Y[i] > screenEnd) {	
 					this.states[i] = INACTIVE;
-				}
-				else {
+				}else {
 					this.cord_X[i] += this.speed_X[i] * deltaTime;
 					this.cord_Y[i] += this.speed_Y[i] * deltaTime;
 				}

@@ -9,12 +9,10 @@ public class Background {
 
 	Background (int arraySize, double speed, double count) {
 		this.x = new ArrayList<>(arraySize);
-		this.y = new ArrayList<Double>(arraySize);
+		this.y = new ArrayList<>(arraySize);
 		this.speed = speed;
 		this.count = count;
 
-		// Collections.fill(x, Math.random() * GameLib.WIDTH);
-		// Collections.fill(y, Math.random() * GameLib.WIDTH);
 		for(int i = 0; i < arraySize; i++){
 			x.add(i, Math.random() * GameLib.WIDTH);
 			y.add(i, Math.random() * GameLib.WIDTH); 

@@ -7,8 +7,6 @@ public class PowerUp extends Basics {
 	double [] speed;					// velocidades
 	double [] angle;				// ângulos (indicam direção do movimento)
 	double [] rotation_speed;					// velocidades de rotação
-	double [] explosion_start;			// instantes dos inícios das explosões
-	double [] explosion_end;			// instantes dos finais da explosões
 	double radius;						// raio (tamanho)
 	long next_power_up;					// instante em que um novo inimigo deve aparecer
 	long power_up_start = 0;		// instante do início do power up
@@ -21,8 +19,6 @@ public class PowerUp extends Basics {
 		this.speed = new double[arraysSize];
 		this.angle = new double[arraysSize];
 		this.rotation_speed = new double[arraysSize];
-		this.explosion_start = new double[arraysSize];
-		this.explosion_end = new double[arraysSize];
 		this.radius = radius;
 		this.next_power_up = nextPowerUp;
 
@@ -47,14 +43,16 @@ public class PowerUp extends Basics {
 		return this.power_up_end;
 	}
 
+	public double distPlayer(Player player, int i) {
+		double dx = this.cord_X[i] - player.getCordX();
+		double dy = this.cord_Y[i] - player.getCordY();
+		double dist = Math.sqrt(dx * dx + dy * dy);
+
+		return dist;
+	}
+
 	public void drawPowerUp(long currentTime) {
 		for(int i = 0; i < this.state.length; i++){
-			
-			if(this.state[i] == EXPLODING){
-				
-				double alpha = (currentTime - this.explosion_start[i]) / (this.explosion_end[i] - this.explosion_start[i]);
-				GameLib.drawExplosion(this.cord_X[i], this.cord_Y[i], alpha);
-			}
 			
 			if(this.state[i] == ACTIVE){
 				

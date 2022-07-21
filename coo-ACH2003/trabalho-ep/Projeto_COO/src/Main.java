@@ -124,15 +124,11 @@ public class Main extends Basics{
 							
 				for(int i = 0; i < enemy1.state.length; i++){
 					
-					double dx = enemy1.cord_X[i] - player.getCordX();
-					double dy = enemy1.cord_Y[i] - player.getCordY();
-					double dist = Math.sqrt(dx * dx + dy * dy);
+					double dist = enemy1.distPlayer(player, i);
 					
 					if(dist < (player.getRadius() + enemy1.radius) * 0.8){
 						if (player.getPowerUpState() == ACTIVE) {
-							enemy1.state[i] = EXPLODING;
-							enemy1.explosion_start[i] = currentTime;
-							enemy1.explosion_end[i] = currentTime + 500;
+							enemy1.exploding(currentTime, i);
 						} else {
 							player.exploding(currentTime);
 						}
@@ -141,15 +137,11 @@ public class Main extends Basics{
 				
 				for(int i = 0; i < enemy2.state.length; i++){
 					
-					double dx = enemy2.cord_X[i] - player.getCordX();
-					double dy = enemy2.cord_Y[i] - player.getCordY();
-					double dist = Math.sqrt(dx * dx + dy * dy);
+					double dist = enemy2.distPlayer(player, i);
 					
 					if(dist < (player.getRadius() + enemy2.radius) * 0.8){
 						if (player.getPowerUpState() == ACTIVE) {
-							enemy2.state[i] = EXPLODING;
-							enemy2.explosion_start[i] = currentTime;
-							enemy2.explosion_end[i] = currentTime + 500;
+							enemy2.exploding(currentTime, i);
 						} else {
 							player.exploding(currentTime);
 						}
@@ -158,35 +150,26 @@ public class Main extends Basics{
 				
 				for(int i = 0; i < enemy3.state.length; i++){
 					
-					double dx = enemy3.cord_X[i] - player.getCordX();
-					double dy = enemy3.cord_Y[i] - player.getCordY();
-					double dist = Math.sqrt(dx * dx + dy * dy);
+					double dist = enemy3.distPlayer(player, i);
 					
 					if(dist < (player.getRadius() + enemy3.radius) * 0.8){
 						if (player.getPowerUpState() == ACTIVE) {
-							enemy3.state[i] = EXPLODING;
-							enemy3.explosion_start[i] = currentTime;
-							enemy3.explosion_end[i] = currentTime + 500;
+							enemy3.exploding(currentTime, i);
 						} else {
 							player.exploding(currentTime);
 						}
 					}
 				}
-	
+				
 				/* colisões player - power up */
 				
 				for(int i = 0; i < power_up1.state.length; i++){
-		
-					double dx = power_up1.cord_X[i] - player.getCordX();
-					double dy = power_up1.cord_Y[i] - player.getCordY();
-					double dist = Math.sqrt(dx * dx + dy * dy);
+					
+					double dist = power_up1.distPlayer(player, i);
 					
 					if(dist < (player.getRadius() + power_up1.radius) * 0.8){
 						
 						power_up1.state[i] = (EXPLODING);
-						power_up1.explosion_start[i] = currentTime;
-						power_up1.explosion_end[i] = currentTime + 1000;
-						
 						player.setPowerUpState(ACTIVE);
 						power_up1.setPowerUpStart(currentTime);
 						power_up1.setPowerUpEnd(currentTime + 5000);
@@ -201,12 +184,7 @@ public class Main extends Basics{
 				for(int i = 0; i < enemy1.state.length; i++){
 										
 					if(enemy1.state[i] == ACTIVE){
-					
-						double dx = enemy1.cord_X[i] - player_projectile.cord_X[k];
-						double dy = enemy1.cord_Y[i] - player_projectile.cord_Y[k];
-						double dist = Math.sqrt(dx * dx + dy * dy);
-						
-						if(dist < enemy1.radius){
+						if(enemy1.distProjectile(player_projectile, i, k) < enemy1.radius){
 							enemy1.exploding(currentTime, i);
 						}
 					}
@@ -215,12 +193,7 @@ public class Main extends Basics{
 				for(int i = 0; i < enemy2.state.length; i++){
 					
 					if(enemy2.state[i] == ACTIVE){
-						
-						double dx = enemy2.cord_X[i] - player_projectile.cord_X[k];
-						double dy = enemy2.cord_Y[i] - player_projectile.cord_Y[k];
-						double dist = Math.sqrt(dx * dx + dy * dy);
-						
-						if(dist < enemy2.radius){
+						if(enemy2.distProjectile(player_projectile, i, k) < enemy2.radius){
 							enemy2.exploding(currentTime, i);
 						}
 					}
@@ -229,12 +202,7 @@ public class Main extends Basics{
 				for(int i = 0; i < enemy3.state.length; i++){
 					
 					if(enemy3.state[i] == ACTIVE){
-						
-						double dx = enemy3.cord_X[i] - player_projectile.cord_X[k];
-						double dy = enemy3.cord_Y[i] - player_projectile.cord_Y[k];
-						double dist = Math.sqrt(dx * dx + dy * dy);
-						
-						if(dist < enemy3.radius){
+						if(enemy3.distProjectile(player_projectile, i, k) < enemy3.radius){
 							enemy3.exploding(currentTime, i);
 						}
 					}
@@ -258,7 +226,6 @@ public class Main extends Basics{
 				if (enemy1.state[i] == EXPLODING){
 					
 					if (currentTime > enemy1.explosion_end[i]){
-						
 						enemy1.state[i] = INACTIVE;
 					}
 				}
@@ -267,11 +234,10 @@ public class Main extends Basics{
 					
 					/* verificando se inimigo saiu da tela */
 					if (enemy1.cord_Y[i] > GameLib.HEIGHT + 10) {
-						
 						enemy1.state[i] = INACTIVE;
 					}
 					else {
-						enemy1.moving(delta, i);
+						enemy1.movingVertical(delta, i);
 						enemy1.shooting(currentTime, i, enemy_projectile, player);
 					}
 				}
@@ -322,14 +288,14 @@ public class Main extends Basics{
 					} else if ( enemy3.cord_Y[i] >= GameLib.HEIGHT/3 && enemy3.cord_Y[i] <= GameLib.HEIGHT/2 ) {
 
 						if (enemy3.cord_X[i] <= GameLib.WIDTH - enemy3.radius*2) {
-							enemy3.cord_X[i] += 0.75;
+							enemy3.movingHorizontal(i, 0.75);
 							enemy3.shooting(currentTime, i, enemy_projectile, player);
 						} else {
-							enemy3.moving(delta, i);
+							enemy3.movingVertical(delta, i);
 						}	
 	
 					} else {
-						enemy3.moving(delta, i);
+						enemy3.movingVertical(delta, i);
 						enemy3.shooting(currentTime, i, enemy_projectile, player);
 					}
 				}

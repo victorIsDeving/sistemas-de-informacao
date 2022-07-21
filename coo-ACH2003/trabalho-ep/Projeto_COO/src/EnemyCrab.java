@@ -6,6 +6,10 @@ public class EnemyCrab extends Enemy {
 		super(arraysSize, state, radius, nextEnemy);
 	}
 	
+	public void movingHorizontal(int i, double speed) {
+		this.cord_X[i] += speed;
+	}
+
 	public void drawEnemy(long currentTime) {
 		for(int i = 0; i < this.state.length; i++){
 				

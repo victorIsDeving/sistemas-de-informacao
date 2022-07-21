@@ -34,7 +34,23 @@ public class Enemy extends Basics {
 		this.explosion_end[i] = currentTime + 500;
 	}
 
-	public void moving (long delta, int i) {
+	public double distPlayer(Player player, int i) {
+		double dx = this.cord_X[i] - player.getCordX();
+		double dy = this.cord_Y[i] - player.getCordY();
+		double dist = Math.sqrt(dx * dx + dy * dy);
+
+		return dist;
+	}
+
+	public double distProjectile(ProjectileBasic playerProjectile, int i, int k) {
+		double dx = this.cord_X[i] - playerProjectile.cord_X[k];
+		double dy = this.cord_Y[i] - playerProjectile.cord_Y[k];
+		double dist = Math.sqrt(dx * dx + dy * dy);
+						
+		return dist;
+	}
+
+	public void movingVertical (long delta, int i) {
 		this.cord_X[i] += this.speed[i] * Math.cos(this.angle[i]) * delta;
 		this.cord_Y[i] += this.speed[i] * Math.sin(this.angle[i]) * delta * (-1.0);
 		this.angle[i] += this.rotation_speed[i] * delta;
