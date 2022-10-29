@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 void troca(int* a, int* b);
-
 void print_array(int* array, int size);
 void bubble_sort(int* array, int size);
 
