@@ -1,12 +1,17 @@
 .data 
-	fileAddress: .asciiz "C:\\sistemas-informacao\\oac2-ACH2055\\ep1\\lista-aleatoria.txt"
+	fileAddress: .asciiz "C:\\sistemas-informacao\\oac2-ACH2055\\ep1\\dados-para-teste\\dados_10-teste.txt"
 	fileContent1: .space 1024
-	fileContent2: .space 1024
-	float1: .double 1.1
-	float2: .double 1.1
-	float3: .double 1.0
+	.align 2 
+	fileContent2: .space 2048
+	.align 2 
+	fileContent3: .space 2048
+	float1: .float 11.111
+	float2: .float 11.111
+	float3: .float 11.111
+	linebreakBuffer: .asciiz " \n"
 	
 .text
+li $s4, 10
 main:
 	li $v0, 13 #abrir um arquivo
 	la $a0, fileAddress #endereço do arquivo no argumento
@@ -22,39 +27,78 @@ main:
 	syscall #realiza a leitura
 	move $s1, $a1 #salva o conteúdo em um registrador separado
         move $s5, $v0 #salva a quantidade de caracteres no arquivo
-        
+        	
 	li $v0, 16 #fechar o arquivo que estiver aberto em $a0
 	move $a0, $s0 #coloca o descritor no registrador $a0
 	syscall
-        
+
         la $s3, fileContent2 #cria uma array para colocar as floats
         move $a1, $s1
         move $a3, $s3
-        jal numbersToArray
-        
-        li $v0, 2 #impressão da FLOAT armazenada em $a0
-        l.s $f12, 8($s3)
-	syscall
+        jal numbersToArray   	
         
 #writing into file
 #abrir arquivo para escrita
 	li $v0, 13 #abrir um arquivo
-	la $a0, fileAddress #endereço do arquivo no argumento
+	la $a0, fileAddress #endereço do arquivo no argumento (cria um novo arquivo ou sobrescreve um já existente)
 	li $a1, 1 #sinalização de escrita de arquivo, 0: leitura
 	li $a2, 0
 	syscall #descritor do arquivo para $v0
-	move $t0, $v0 #cria uma cópia do descritor
+	move $s0, $v0 #cria uma cópia do descritor
 	
 	li $v0, 15 #instrução para escrever conteúdo no arquivo referenciado em $a0
-	move $a0, $t0 #descriptor em a0
-	la $a1, ($s3) #conteúdo concatenado das strings
-	add $a2, $zero, $s5 #caracteres para escrever no arquivo
-	syscall #realiza a escrita (cria um novo arquivo ou sobrescreve um já existente)
+	move $a0, $s0 #descriptor
+	move $a1, $s1 #conteúdo
+	move $a2, $s5 #caracteres para escrever no arquivo
+	syscall #realiza a escrita	
+		
+	#linebreaker para separar conteúdos
+	li $v0, 15 #instrução para escrever conteúdo no arquivo referenciado em $a0
+	move $a0, $s0 #descriptor
+	la $a1, linebreakBuffer #conteúdo
+	li $a2, 2 #caracteres para escrever no arquivo
+	syscall #realiza a escrita, depois do que foi escrito anteriormente
 	
+	li $t0, 0
+	move $t1, $s3
+	writeLoop:
+		li $v0, 15 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		move $a0, $s0 #descriptor
+		move $a1, $t1 #conteúdo
+		li $a2, 8 #caracteres para escrever no arquivo
+		syscall #realiza a escrita
+		
+		li $v0, 15 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		move $a0, $s0 #descriptor
+		la $a1, linebreakBuffer #conteúdo
+		li $a2, 2 #caracteres para escrever no arquivo
+		syscall #realiza a escrita, depois do que foi escrito anteriormente
+		
+		addi  $t1, $t1, 4
+		addi $t0, $t0, 1
+		bne $t0, $s4, writeLoop
+        	
 	li $v0, 16 #fechar o arquivo que estiver aberto em $a0
-	move $a0, $t0 #coloca o descritor no registrador $a0
-	syscall
-        
+	move $a0, $s0 #coloca o descritor no registrador $a0
+	syscall	
+	
+#####printar no console do mars o array ordenado
+	li $t0, 0
+	move $t1, $s3
+	printLoop:
+		li $v0, 2 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		l.s $f12, ($t1)
+		syscall #realiza a escrita
+		
+		li $v0, 4 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		la $a0, linebreakBuffer #conteúdo
+		syscall #realiza a escrita, depois do que foi escrito anteriormente
+		
+		addi  $t1, $t1, 4
+		addi $t0, $t0, 1
+		bne $t0, $s4, printLoop
+	
+#####end program
         li $v0, 10 # system call code for exit = 10
 	syscall # call operating sys
 	
@@ -65,9 +109,9 @@ numbersToArray:
         li  $t8, 0 #posição na array resultado, para adicionar as floats
         move $t0, $a1 #cópia 1 do endereço do conteúdo lido no arquivo, para usar nos pontos
         move $t1, $a1 #cópia 2 do endereço do conteúdo lido no arquivo, para usar nos espaços
-        ldc1 $f2, float1 #float para fazer as contas da parte inteira e da parte decimal
-        ldc1 $f4, float2 #float para adicionar na array
-        ldc1 $f6, float3 #float para multiplicação pelas potências
+        l.s $f2, float1 #float para fazer as contas da parte inteira e da parte decimal
+        l.s  $f4, float2 #float para adicionar na array
+        l.s $f6, float3 #float para multiplicação pelas potências
         
 numbersToArrayLoop:
 	lb $t2, ($t1) #verificar se acabou os números do input
@@ -160,23 +204,23 @@ numbersToArrayLoop:
         add $t0, $t0, $t6 #t0 nos pontos
         addi $t0,$t0,1 #adicionando mais um para ficar no .
         addi $t1,$t1,1 #$t1 buscando o próximo espaço
-        li $t6, 1 #contador de iterações para as poténcias de 10 (agora negativas)
+        li $t6, -1 #contador de iterações para as potências de 10 (agora negativas)
         
 	decimalPart:
-		lb $t2, ($t1) #coloca o byte que está no endereço t2 em t4
+		lb $t2, ($t1) #coloca o byte que está no endereço t1 em t2
         	beq $t2, 32, endDecimalPart #procura pelo próximo espaço que separa dois números na lista
         	addi $t1, $t1, 1
         	j decimalPart
 	endDecimalPart: #t1 tem endereço de um espaço que separa parte decimal do número atual e decimal
 	
 	loopDecimal: 
-	#vai iterar do número menos significativo da parte decimal para o mais significativo
-	#do endereço que tem um espaço até o que tem um ponto
-	#e vai somando em f1 para montar a parte decimal do float
-		subi $t1,$t1,1 #t0 anda do menos significativo para o mais significativo
-		li $t6,1 #iterações para a potência de 10
+	#vai iterar do número mais significativo da parte decimal para o menos significativo
+	#do endereço que tem um ponto até o que tem um espaço
+	#e vai somando em f2 para montar a parte decimal do float
+		addi $t0,$t0,1 #t0 anda do mais significativo para o menos significativo
+        	addi $t6, $t6, 1 #contador de quantas vezes vamos multiplicar a base decimal
 		beq $t0,$t1, endLoopDecimal #verifica se acabou a parte decimal do número
-		li $t7, 1 #para iterar nas potências de 10
+		li $t7, 0 #para iterar nas potências de 10
 		li $t9, 0x3f800000  # 0x3f800000 is the encoding for 1.0 single precision float
 		mtc1 $t9, $f6       # move that float to $f6
 		li $t9, 0x41200000  # 0x41200000 is the encoding for 10.0 single precision float
@@ -184,11 +228,11 @@ numbersToArrayLoop:
 		div.s $f6,$f6,$f8  #valor base = 0.1
 		negativePowersOfTen:
 			beq $t7,$t6,endNegativePowersOfTen
-			subi $t7,$t7,1
+			addi $t7,$t7,1
 			div.s $f6,$f6,$f8
 			j negativePowersOfTen
 		endNegativePowersOfTen:
-		lb $t2, ($t1) #coloca o byte em t2
+		lb $t2, ($t0) #coloca o byte em t2
 		bne $t2, 48, dec1 #ASCII 48 = 0
 		li $t9, 0x00000000  # 0x00000000 is the encoding for 0.0 single precision float
 		mtc1 $t9, $f4       # move that float to $f4
@@ -243,9 +287,8 @@ numbersToArrayLoop:
 	s.s  $f2, ($a3)
 	addi $a3, $a3, 4 #passa para a próxima posição
 	
-        add $t1, $t1, $t6 #t1 nos espaços
-        addi $t1,$t1,2 #adicionando mais um para ficar no espaço e mais um para buscar o próximo espaço
-        addi $t0,$t0,1 #$t1 buscando o próximo ponto
+        addi $t1,$t1,3 #$t1 para o início do próximo número, pula um \r, um \n e cai no primeiro dígito do próximo número
+        addi $t0,$t0,3 #$t2 para o início do próximo número
 	j numbersToArrayLoop
 endNumbersToArray:
 	jr $ra

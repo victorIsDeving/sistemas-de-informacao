@@ -1,10 +1,11 @@
 .data 
 	fileAddress: .asciiz "C:\\sistemas-informacao\\oac2-ACH2055\\ep1\\lista-aleatoria.txt"
 	string: .asciiz "1.1 1.1 1.1 1.1 1.1 11.1 1.1 1.1 11.1 11.1 " #42 caracteres
+	string2: .asciiz "\n\nteste" #7 caracteres
 	
 .text
 	li $v0, 13 #abrir um arquivo
-	la $a0, fileAddress #endereço do arquivo no argumento
+	la $a0, fileAddress #endereço do arquivo no argumento, cria um novo ou sobrescreve um existente
 	li $a1, 1 #sinalização de escrita de arquivo, 0: leitura
 	li $a2, 0
 	syscall #descritor do arquivo para $v0
@@ -14,7 +15,13 @@
 	move $a0, $t0
 	la $a1, string #conteúdo
 	li $a2, 43 #caracteres para escrever no arquivo
-	syscall #realiza a escrita (cria um novo arquivo ou sobrescreve um já existente)
+	syscall #realiza a escrita
+	
+	li $v0, 15 #instrução para escrever conteúdo no arquivo referenciado em $v0
+	move $a0, $t0
+	la $a1, string2 #conteúdo
+	li $a2,7 #caracteres para escrever no arquivo
+	syscall #realiza a escrita, depois do que foi escrito anteriormente
 	
 	li $v0, 16 #fechar o arquivo que estiver aberto em $a0
 	move $a0, $s0 #coloca o descritor no registrador $a0

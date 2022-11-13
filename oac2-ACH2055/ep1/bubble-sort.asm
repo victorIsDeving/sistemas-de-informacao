@@ -54,7 +54,7 @@ trocaPosição: #recebe dois endereços, em a2 e a3, para trocar o conteúdo ent
 bubbleSort:
 	li $t0, 0 #primeiro loop
 	move $t1, $s1 #segundo loop
-	li $t3, 0
+	li $t3, 0 #temp para pegar o valor de t0 + 1
 	move $t4, $a0 #cria uma cópia da array
 	addi $t4, $t4, 16 #4*4 endereço do último elemento da array
 	loop1:
