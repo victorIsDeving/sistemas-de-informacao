@@ -1,5 +1,5 @@
 .data 
-	fileAddress: .asciiz "C:\\sistemas-informacao\\oac2-ACH2055\\ep1\\dados-para-teste\\dados_10-teste.txt"
+	fileAddress: .asciiz "C:\\sistemas-informacao\\oac2-ACH2055\\ep1\\dados-para-teste\\dados_1000.txt"
 	fileContent1: .space 1024
 	.align 2 
 	fileContent2: .space 2048
@@ -11,6 +11,11 @@
 	linebreakBuffer: .asciiz " \n"
 	
 .text
+#time check
+li $v0, 30
+syscall
+move $v1, $a0 #salva o high order do milisec inicial
+
 main:
 	li $v0, 13 #abrir um arquivo
 	la $a0, fileAddress #endereço do arquivo no argumento
@@ -44,7 +49,7 @@ main:
 ###sorting###
 #############
 	move $a2, $s2 #tamanho da array
-	li $a1, 1 #1 para o quicksort, 2 para o bubblesort
+	li $a1, 2 #1 para o quicksort, 2 para o bubblesort
 	move $a0, $s3 #endereço da array com os floats
 	
 	subi $sp, $sp, 8 #espaço na pilha, sp = stack pointer
@@ -104,18 +109,25 @@ endBubbleSort:
 	li $t0, 0
 	move $t1, $s3
 	printLoop:
-		li $v0, 2 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		li $v0, 2 #instrução para escrever conteúdo no console
 		l.s $f12, ($t1)
 		syscall #realiza a escrita
 		
-		li $v0, 4 #instrução para escrever conteúdo no arquivo referenciado em $a0
+		li $v0, 4 #instrução para escrever conteúdo no console
 		la $a0, linebreakBuffer #conteúdo
 		syscall #realiza a escrita, depois do que foi escrito anteriormente
 		
 		addi  $t1, $t1, 4
 		addi $t0, $t0, 1
 		bne $t0, $s2, printLoop
-	
+
+#time check
+li $v0, 30
+syscall
+move $t0, $a0 #salva o high order do milisec final
+
+sub $t0, $t0, $v1 #final menos inicial para ver milisec total que rodou o programa
+
 #####end program
         li $v0, 10 # system call code for exit = 10
 	syscall # call operating sys
