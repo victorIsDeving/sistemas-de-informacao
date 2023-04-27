@@ -13,6 +13,7 @@ typedef struct NO {
 
 //Estrutura que monta um vetor de listas de adjacência
 typedef struct {
+    int flag; //0 (desconhecido), 1 (descoberto) e 2 (concluído)
     NO* inicio;
 } VERTICE;
 //Cada índice do vetor representa um vértice do grafo
@@ -46,9 +47,16 @@ void imprime(VERTICE* g, int vertices) {
         printf("%i:", i);
         NO* n = g[i].inicio;
         while (n) {
-            printf(" -> (v: %i, p:%i)", n->adj, n->peso);
+            printf(" -> (v:%i, p:%i)", n->adj, n->peso);
             n = n->prox;
         }
         printf("\n");
+    }
+    printf("\n");
+}
+
+void zerarFlags(VERTICE* g, int vertices) {
+    for (int i = 0; i < vertices; i++) {
+        g[i].flag = 0;
     }
 }
