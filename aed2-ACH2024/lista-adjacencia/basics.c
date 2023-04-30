@@ -14,6 +14,8 @@ typedef struct NO {
 //Estrutura que monta um vetor de listas de adjacência
 typedef struct {
     int flag; //0 (desconhecido), 1 (descoberto) e 2 (concluído)
+    int dist; //usado para a busca em largura
+
     NO* inicio;
 } VERTICE;
 //Cada índice do vetor representa um vértice do grafo
@@ -55,8 +57,31 @@ void imprime(VERTICE* g, int vertices) {
     printf("\n");
 }
 
+//Imprimir o grafo com distâncias para uma origem
+//origem determinada na busca em largura
+void imprimeComDist(VERTICE* g, int vertices) {
+    // printf("Lista de Adjacencia\n");
+    for (int i = 0; i < vertices; i++) {
+        printf("(%i) %i:", g[i].dist, i);
+        NO* n = g[i].inicio;
+        while (n) {
+            printf(" -> (v:%i, p:%i)", n->adj, n->peso);
+            n = n->prox;
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 void zerarFlags(VERTICE* g, int vertices) {
     for (int i = 0; i < vertices; i++) {
         g[i].flag = 0;
     }
+}
+
+void inicializarDistancias(VERTICE* g, int origem, int vertices) {
+    for (int i = 0; i < vertices; i++) {
+        g[i].dist = 1000; //Um valor muito alto para as trocas por distâncias menores
+    }
+    g[origem].dist = 0;
 }
