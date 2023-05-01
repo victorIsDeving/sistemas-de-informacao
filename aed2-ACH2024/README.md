@@ -9,4 +9,4 @@ Testes foram feitos com *gcc*, rodando o comando
     `gcc <NOME_ARQUIVO>.c -o <NOME_OUTPUT> && ./<NOME_OUTPUT>`
 no terminal GitBash.
 
-Os scripts para rodar o debugger do VSCode foram tirados do site [https://gourav.io/blog/setup-vscode-to-run-debug-c-cpp-code]
+Os scripts para rodar o debugger do VSCode foram tirados do site https://gourav.io/blog/setup-vscode-to-run-debug-c-cpp-code
