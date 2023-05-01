@@ -45,3 +45,24 @@ void imprime(int vertices, int m[vertices][vertices]) {
         printf("\n");
     }
 }
+
+void imprimeComDist(int vertices, int m[vertices][vertices], AUXILIAR* aux) {
+    printf("(d) |");
+    for (int i = 0; i < vertices; i++) {
+        printf("  %i|", i);
+    }
+    printf("\n");
+    for (int j = 0; j < vertices; j++) {
+        printf("(%i)%i|", aux[j].dist, j);
+        for (int k = 0; k < vertices; k++) {
+            if (m[j][k] == -1) {
+                printf(" %i|", m[j][k]);
+            } else if (m[j][k] < 10) {
+                printf("  %i|", m[j][k]);
+            } else {
+                printf(" %i|", m[j][k]);
+            }
+        }
+        printf("\n");
+    }
+}
