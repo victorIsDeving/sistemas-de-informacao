@@ -21,11 +21,11 @@ void inicializarAuxiliar(AUXILIAR* aux, int vertices) {
     }
 }
 
-void criarArestas(int origem, int destino, int peso, int vertices, int m[vertices][vertices]) {
+void criarArestasMatriz(int origem, int destino, int peso, int vertices, int m[vertices][vertices]) {
     m[origem][destino] = peso;
 }
 
-void imprime(int vertices, int m[vertices][vertices]) {
+void imprimeMatriz(int vertices, int m[vertices][vertices]) {
     printf(" |");
     for (int i = 0; i < vertices; i++) {
         printf("  %i|", i);
@@ -46,7 +46,7 @@ void imprime(int vertices, int m[vertices][vertices]) {
     }
 }
 
-void imprimeComDist(int vertices, int m[vertices][vertices], AUXILIAR* aux) {
+void imprimeMatrizComDist(int vertices, int m[vertices][vertices], AUXILIAR* aux) {
     printf("(d) |");
     for (int i = 0; i < vertices; i++) {
         printf("  %i|", i);

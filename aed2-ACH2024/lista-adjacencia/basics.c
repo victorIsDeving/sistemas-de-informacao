@@ -23,7 +23,7 @@ typedef struct {
 // para o vértice indicado na estrura NO que compõe a lista ligada de adjacências
 
 //Cria o grafo com a estrutura VERTICE com V vértives
-VERTICE* criarGrafo(int V) {
+VERTICE* criarGrafoLista(int V) {
     VERTICE* g = (VERTICE*) malloc(sizeof(VERTICE) * V);
     for (int i = 0; i < V; i++) {
         g[i].inicio = NULL;
@@ -32,7 +32,7 @@ VERTICE* criarGrafo(int V) {
 }
 
 //Cria as conexões no grafo
-void criarArestas(VERTICE* g, int origem, int destino, int peso) {
+void criarArestasLista(VERTICE* g, int origem, int destino, int peso) {
     //Cria o novo NO para adicionar na lista ligada de adjacências
     NO* n = (NO*) malloc(sizeof(NO));
     n->adj = destino;
@@ -43,7 +43,7 @@ void criarArestas(VERTICE* g, int origem, int destino, int peso) {
 }
 
 //Imprimir o grafo
-void imprime(VERTICE* g, int vertices) {
+void imprimeLista(VERTICE* g, int vertices) {
     // printf("Lista de Adjacencia\n");
     for (int i = 0; i < vertices; i++) {
         printf("%i:", i);
@@ -59,7 +59,7 @@ void imprime(VERTICE* g, int vertices) {
 
 //Imprimir o grafo com distâncias para uma origem
 //origem determinada na busca em largura
-void imprimeComDist(VERTICE* g, int vertices) {
+void imprimListaComDist(VERTICE* g, int vertices) {
     // printf("Lista de Adjacencia\n");
     for (int i = 0; i < vertices; i++) {
         printf("(%i) %i:", g[i].dist, i);
@@ -73,13 +73,13 @@ void imprimeComDist(VERTICE* g, int vertices) {
     printf("\n");
 }
 
-void zerarFlags(VERTICE* g, int vertices) {
+void zerarFlagsLista(VERTICE* g, int vertices) {
     for (int i = 0; i < vertices; i++) {
         g[i].flag = 0;
     }
 }
 
-void inicializarDistancias(VERTICE* g, int origem, int vertices) {
+void inicializarDistanciasLista(VERTICE* g, int origem, int vertices) {
     for (int i = 0; i < vertices; i++) {
         g[i].dist = 1000; //Um valor muito alto para as trocas por distâncias menores
     }
