@@ -149,30 +149,40 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
     inicializaFlag(g, N);
     inicializaVia(g, N);
     inicializaDist(g, N);
+    //na lista, o vertice 1 ocupa a posição 0 e assim por diante
     g[inicio - 1].dist = 0; //distância da origem para si mesmo é zero
     inicializaAberto(g, N, aberto);
 
+    //define o primeiro vertice que será explorado
     int z = inicio - 1;
     NO* n = g[z].inicio;
+    //iterar pelos adjacentes
     while(n) {
+        //termina o vértice
         g[z].flag = 1;
+        //faz a comparação da distância atual dos adjacentes com a nova distância 
         if( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
             g[n->adj - 1].dist = g[z].dist + n->peso;
             g[n->adj - 1].via = z + 1;
         }
-
+        //passa para o próximo adjacente
         n = n->prox;
+        //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
         if (!n) {
+            //variável para controle do vértice com menor distância
             int shorter = 2147483647;
             for (int i = 0; i < N; i++) {
+                //o próximo vértice será o que não foi terminado E tem a menor distância atual
                 if (g[i].flag != 1 && shorter > g[i].dist) {
                     shorter = g[i].dist;
                     z = i;
                 }
             }
+            //se teve alteração na controle é porque existe vértice alcançável
             if (shorter != 2147483647) {
                 n = g[z].inicio;
             }
+            //se não teve alteração o n já é NULL e vai quebrar o laço while
         }
     }
 
