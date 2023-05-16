@@ -48,9 +48,13 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 //origem determinada na busca em largura
 void imprimeListaCompleta(VERTICE* g, int vertices) {
     // printf("Lista de Adjacencia\n");
-    printf("|F|A|V|D|V|:ListaAdjacencia\n");
+    printf("|F|A|Vi|Dist|V|:ListaAdjacencia\n");
     for (int i = 0; i < vertices; i++) {
-        printf("|%i|%i|%i|%i|%i|:", g[i].flag, g[i].aberto, g[i].via, g[i].dist, i+1);
+        if (g[i].dist == 2147483647) {
+            printf("|%i|%i|%i|inf|%i|:", g[i].flag, g[i].aberto, g[i].via, i+1);
+        } else {
+            printf("|%i|%i|%i|%i|%i|:", g[i].flag, g[i].aberto, g[i].via, g[i].dist, i+1);
+        }
         NO* n = g[i].inicio;
         while (n) {
             printf(" -> (v:%i, p:%i)", n->adj, n->peso);
@@ -58,7 +62,6 @@ void imprimeListaCompleta(VERTICE* g, int vertices) {
         }
         printf("\n");
     }
-    printf("\n");
 }
 
 // inicializar flags do grafo como desconhecidos = 0
@@ -104,6 +107,12 @@ VERTICE* grafoListaAdjacencia(int N, int A, int* ijpeso) {
         n1->adj = ijpeso[j + 1];
         n1->prox = resp[ijpeso[j] - 1].inicio;
         resp[ijpeso[j] - 1].inicio = n1;
+
+        NO* n2 = (NO*) malloc(sizeof(NO));
+        n2->peso = ijpeso[j + 2];
+        n2->adj = ijpeso[j];
+        n2->prox = resp[ijpeso[j + 1] - 1].inicio;
+        resp[ijpeso[j + 1] - 1].inicio = n2;
         
         j = j + 3;
     }
@@ -170,7 +179,7 @@ int main() {
 
 	// exemplo de teste no enunciado do ep
     printf("Teste 2\n");
-	int N2 = 8;
+	int N2 = 9;
 	int aberto2[] = {0,1,1,1,1,1,1,1}; 
 	int inicio2 = 7;
 	int fim2 = 4;
