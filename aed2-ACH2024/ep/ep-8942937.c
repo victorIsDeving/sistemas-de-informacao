@@ -62,7 +62,7 @@ void imprimeListaCompleta(VERTICE* g, int vertices) {
             if (g[i].dist == 0) {
                 printf("000|");
             } else if (g[i].dist < 100) {
-                printf("0%i|", g[i].dist);
+                printf(" %i|", g[i].dist);
             } else {
                 printf("%i|", g[i].dist);
             }
@@ -141,7 +141,7 @@ VERTICE* grafoListaAdjacencia(int N, int A, int* ijpeso) {
 NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int chave)
 {
 	NO* resp;
-	resp = NULL;
+    resp = NULL;
 
 	// montar grafo em lista de adjacência
     VERTICE* g = grafoListaAdjacencia(N, A, ijpeso);
@@ -152,7 +152,42 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
     g[inicio - 1].dist = 0; //distância da origem para si mesmo é zero
     inicializaAberto(g, N, aberto);
 
+    int z = inicio - 1;
+    NO* n = g[z].inicio;
+    while(n) {
+        g[z].flag = 1;
+        if( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
+            g[n->adj - 1].dist = g[z].dist + n->peso;
+            g[n->adj - 1].via = z + 1;
+        }
+
+        n = n->prox;
+        if (!n) {
+            int shorter = 2147483647;
+            for (int i = 0; i < N; i++) {
+                if (g[i].flag != 1 && shorter > g[i].dist) {
+                    shorter = g[i].dist;
+                    z = i;
+                }
+            }
+            if (shorter != 2147483647) {
+                n = g[z].inicio;
+            }
+        }
+    }
+
     imprimeListaCompleta(g, N);
+    
+    //montar retorno
+    int v = fim;
+    while (v != -1) {
+        NO* r = (NO*) malloc(sizeof(NO));
+        r->adj = v;
+        r->prox = resp;
+        resp = r;
+        v = g[v - 1].via;
+    }
+
 
 	return resp;
 }
