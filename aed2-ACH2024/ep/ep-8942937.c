@@ -48,13 +48,26 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 //origem determinada na busca em largura
 void imprimeListaCompleta(VERTICE* g, int vertices) {
     // printf("Lista de Adjacencia\n");
-    printf("|F|A|Vi|Dist|V|:ListaAdjacencia\n");
+    printf("|F|A|V|Dis|V|:ListaAdjacencia\n");
     for (int i = 0; i < vertices; i++) {
-        if (g[i].dist == 2147483647) {
-            printf("|%i|%i|%i|inf|%i|:", g[i].flag, g[i].aberto, g[i].via, i+1);
+        printf("|%i|%i|", g[i].flag, g[i].aberto);
+        if (g[i].via == -1) {
+            printf("n|");
         } else {
-            printf("|%i|%i|%i|%i|%i|:", g[i].flag, g[i].aberto, g[i].via, g[i].dist, i+1);
+            printf("%i|", g[i].via);
         }
+        if (g[i].dist == 2147483647) {
+            printf("inf|");
+        } else {
+            if (g[i].dist == 0) {
+                printf("000|");
+            } else if (g[i].dist < 100) {
+                printf("0%i|", g[i].dist);
+            } else {
+                printf("%i|", g[i].dist);
+            }
+        }
+        printf("%i|", i + 1);
         NO* n = g[i].inicio;
         while (n) {
             printf(" -> (v:%i, p:%i)", n->adj, n->peso);
