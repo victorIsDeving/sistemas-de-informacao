@@ -209,6 +209,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 int main() {
 	// aqui vc pode incluir codigo de teste
 
+    // teste 1
 	// exemplo de teste trivial
     printf("Teste 1\n");
 	int N1=3; // grafo de 3 vertices numerados de 1..3
@@ -235,7 +236,8 @@ int main() {
     }
     printf("\n");
 
-	// exemplo de teste no enunciado do ep
+	// teste 2
+    // exemplo de teste no enunciado do ep
     printf("Teste 2\n");
 	int N2 = 9;
 	int aberto2[] = {0,1,1,1,1,1,1,1}; 
@@ -262,6 +264,39 @@ int main() {
         printf("%i", teste2->adj);
         teste2 = teste2->prox;
         if(teste2) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+	// teste 3
+    // enunciado do ep com uma diferença no vetor de vértices abertos
+    printf("Teste 2\n");
+	int N3 = 9;
+	int aberto3[] = {1,1,0,1,1,1,1,1}; 
+	int inicio3 = 7;
+	int fim3 = 4;
+	int chave3 = 6;
+	int ijpeso3[] = {
+        1,2,30, 
+        1,3,20, 
+        2,6,20, 
+        2,7,30, 
+        3,4,20,
+        3,7,80,
+        4,9,80,
+        5,8,10,
+        6,7,10,
+        7,9,80
+    };
+
+	NO* teste3 = NULL;
+	teste3 = caminho(N3, 10, ijpeso3, aberto3, inicio3, fim3, chave3);
+    printf("    ");
+    while(teste3) {
+        printf("%i", teste3->adj);
+        teste3 = teste3->prox;
+        if(teste3) {
             printf(" -> ");
         }
     }
