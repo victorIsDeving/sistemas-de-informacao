@@ -5,9 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
-#define BOOL int
-#define true 1
-#define false 0
 
 int grupo() {
   return 0;
@@ -34,7 +31,7 @@ typedef struct estr
 typedef struct 
 {
        int flag; // para uso na busca em largura e profundidade, se necessario
-       BOOL aberto; // vale true se a sala em questao esta aberta
+       int aberto; // vale 1 se a sala em questao esta aberta
        int via; // use este campo se precisar computar algum caminho etc.
        int dist; // use este campo se precisar computar alguma distancia etc.
        NO* inicio;
@@ -142,34 +139,40 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 {
 	NO* resp;
     resp = NULL;
-    // variável controle para a chave que abre o vértice trancado
-    BOOL hasKey = false;
+	NO* path1;
+    path1 = NULL;
+	NO* path2;
+    path2 = NULL;
+    int hasKey = 0;
 
 	// montar grafo em lista de adjacência
     VERTICE* g = grafoListaAdjacencia(N, A, ijpeso);
     // inicializar campos da estrutura do grafo
+    // na lista, o vertice 1 ocupa a posição 0 e assim por diante
     inicializaFlag(g, N);
     inicializaVia(g, N);
     inicializaDist(g, N);
-    //na lista, o vertice 1 ocupa a posição 0 e assim por diante
     g[inicio - 1].dist = 0; //distância da origem para si mesmo é zero
     inicializaAberto(g, N, aberto);
 
-    //define o primeiro vertice que será explorado
+    // Método para resolução
+    // Faz um Djikstra até o final sem passar por vértices fechados - path1
+    // Faz um Djikstra até o vértice com a chave e depois um djikstra até o final - path2
+    // Compara os dois e escolhe o caminho mais barato
+
+    // DJIKSTRA ATÉ O FINAL CONTORNANDO OS VÉRTICES FECHADOS
+    // define o primeiro vertice que será explorado
     int z = inicio - 1;
     NO* n = g[z].inicio;
-    // começa no vertice que tem a chave
-    if (inicio == chave) hasKey = true;
     //iterar pelos adjacentes
     while(n) {
-        if (g[n->adj - 1].aberto == true) { // o vértice deve estar aberto
-            // se for o vértice com a chave atualiza a variável controle
-            if (n->adj - 1 == chave) hasKey = true;
+        if (g[n->adj - 1].aberto == 1) { // o vértice deve estar aberto
             //faz a comparação da distância atual dos adjacentes com a nova distância 
-            if ( (g[n->adj - 1].dist) >= (g[z].dist + n->peso) ) {
+            if ( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
                     g[n->adj - 1].dist = g[z].dist + n->peso;
                     g[n->adj - 1].via = z + 1;
             }
+            if (n->adj == fim) break;
             //passa para o próximo adjacente
             n = n->prox;
             //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
@@ -191,36 +194,7 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
                 }
                 //se não teve alteração o n já é NULL e vai quebrar o laço while
             }
-        } else if (hasKey) { // se não estiver aberto devemos ter a chave
-            // se for o vértice com a chave atualiza a variável controle
-            if (n->adj - 1 == chave) hasKey = true;
-            //faz a comparação da distância atual dos adjacentes com a nova distância 
-            if( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
-                g[n->adj - 1].dist = g[z].dist + n->peso;
-                g[n->adj - 1].via = z + 1;
-            }
-            //passa para o próximo adjacente
-            n = n->prox;
-            //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
-            if (!n) {
-                //termina o vértice pai
-                g[z].flag = 1;
-                //variável para controle do vértice com menor distância
-                int shorter = 2147483647;
-                for (int i = 0; i < N; i++) {
-                    //o próximo vértice será o que não foi terminado E tem a menor distância atual
-                    if (g[i].flag != 1 && shorter > g[i].dist) {
-                        shorter = g[i].dist;
-                        z = i;
-                    }
-                }
-                //se teve alteração na controle é porque existe vértice alcançável
-                if (shorter != 2147483647) {
-                    n = g[z].inicio;
-                }
-                //se não teve alteração o n já é NULL e vai quebrar o laço while
-            }
-        } else { // se está fechado e não temos a chavve
+        } else { // se está fechado
             //passa para o próximo adjacente
             n = n->prox;
             //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
@@ -245,18 +219,155 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
         }
     }
 
-    imprimeListaCompleta(g, N);
+    // imprimeListaCompleta(g, N);
     
-    //montar retorno
+    //montar retorno e soma da distância
+    int dist1 = g[fim - 1].dist;
     int v = fim;
     while (v != -1) {
         NO* r = (NO*) malloc(sizeof(NO));
         r->adj = v;
-        r->prox = resp;
-        resp = r;
+        r->prox = path1;
+        path1 = r;
         v = g[v - 1].via;
     }
 
+    // DIJKSTRA ATÉ O VÉRTICE CHAVE E DEPOIS ATÉ O FINAL
+    // Reinicializar campos da estrutura do grafo
+    // na lista, o vertice 1 ocupa a posição 0 e assim por diante
+    inicializaFlag(g, N);
+    inicializaVia(g, N);
+    inicializaDist(g, N);
+    g[inicio - 1].dist = 0; //distância da origem para si mesmo é zero
+    //define o primeiro vertice que será explorado
+    z = inicio - 1;
+    n = g[z].inicio;
+    //iterar pelos adjacentes
+    while(n) {
+        if (g[n->adj - 1].aberto == 1) { // o vértice deve estar aberto
+            //faz a comparação da distância atual dos adjacentes com a nova distância 
+            if ( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
+                    g[n->adj - 1].dist = g[z].dist + n->peso;
+                    g[n->adj - 1].via = z + 1;
+            }
+            if (n->adj == chave) break;
+            //passa para o próximo adjacente
+            n = n->prox;
+            //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
+            if (!n) {
+                //termina o vértice pai
+                g[z].flag = 1;
+                //variável para controle do vértice com menor distância
+                int shorter = 2147483647;
+                for (int i = 0; i < N; i++) {
+                    //o próximo vértice será o que não foi terminado E tem a menor distância atual
+                    if (g[i].flag != 1 && shorter > g[i].dist) {
+                        shorter = g[i].dist;
+                        z = i;
+                    }
+                }
+                //se teve alteração na controle é porque existe vértice alcançável
+                if (shorter != 2147483647) {
+                    n = g[z].inicio;
+                }
+                //se não teve alteração o n já é NULL e vai quebrar o laço while
+            }
+        } else { // se está fechado
+            //passa para o próximo adjacente
+            n = n->prox;
+            //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
+            if (!n) {
+                //termina o vértice pai
+                g[z].flag = 1;
+                //variável para controle do vértice com menor distância
+                int shorter = 2147483647;
+                for (int i = 0; i < N; i++) {
+                    //o próximo vértice será o que não foi terminado E tem a menor distância atual
+                    if (g[i].flag != 1 && shorter > g[i].dist) {
+                        shorter = g[i].dist;
+                        z = i;
+                    }
+                }
+                //se teve alteração na controle é porque existe vértice alcançável
+                if (shorter != 2147483647) {
+                    n = g[z].inicio;
+                }
+                //se não teve alteração o n já é NULL e vai quebrar o laço while
+            }
+        }
+    }
+    //montar retorno e soma da distância
+    int dist2 = g[chave - 1].dist;
+    v = chave;
+    while (v != -1) {
+        NO* r = (NO*) malloc(sizeof(NO));
+        r->adj = v;
+        r->prox = path2;
+        path2 = r;
+        v = g[v - 1].via;
+    }
+
+    //outro djikstra partindo da chave
+    inicializaFlag(g, N);
+    inicializaVia(g, N);
+    inicializaDist(g, N);
+    g[chave - 1].dist = 0; //distância da origem para si mesmo é zero
+    z = chave - 1;
+    n = g[z].inicio;
+    //iterar pelos adjacentes
+    while(n) { //todos os vértices estão abertos agora
+        //faz a comparação da distância atual dos adjacentes com a nova distância 
+        if ( (g[n->adj - 1].dist) > (g[z].dist + n->peso) ) {
+                g[n->adj - 1].dist = g[z].dist + n->peso;
+                g[n->adj - 1].via = z + 1;
+        }
+        if (n->adj == fim) break;
+        //passa para o próximo adjacente
+        n = n->prox;
+        //se acabou os adjacentes, busca pelo próximo vértice a ser estudado
+        if (!n) {
+            //termina o vértice pai
+            g[z].flag = 1;
+            //variável para controle do vértice com menor distância
+            int shorter = 2147483647;
+            for (int i = 0; i < N; i++) {
+                //o próximo vértice será o que não foi terminado E tem a menor distância atual
+                if (g[i].flag != 1 && shorter > g[i].dist) {
+                    shorter = g[i].dist;
+                    z = i;
+                }
+            }
+            //se teve alteração na controle é porque existe vértice alcançável
+            if (shorter != 2147483647) {
+                n = g[z].inicio;
+            }
+            //se não teve alteração o n já é NULL e vai quebrar o laço while
+        }
+    }
+    //montar retorno e soma da distância
+    dist2 += g[fim - 1].dist;
+    NO* aux1 = NULL;
+    v = fim;
+    while (v != -1) {
+        if (v != chave) { 
+            NO* r = (NO*) malloc(sizeof(NO));
+            r->adj = v;
+            r->prox = aux1;
+            aux1 = r;
+        }
+        v = g[v - 1].via;
+    }
+    NO* aux2 = path2;
+    while (aux2->prox) {
+        aux2 = aux2->prox;
+    }
+    aux2->prox = aux1;
+
+    if (dist1 <= dist2) {
+        resp = path1;
+    } else {
+        resp = path2;
+    }
 
 	return resp;
 }
@@ -393,7 +504,69 @@ int main() {
         }
     }
     printf("\n");
-	
+
+	// teste 5
+    // teste 3 com diferença no peso de algumas arestas
+    printf("Teste 5\n");
+	int N5 = 9;
+	int aberto5[] = {1,1,0,1,1,1,1,1}; 
+	int inicio5 = 7;
+	int fim5 = 4;
+	int chave5 = 6;
+	int ijpeso5[] = {
+        1,2,30, 
+        1,3,20, 
+        2,6,20, 
+        2,7,10, 
+        3,4,20,
+        3,7,80,
+        4,9,80,
+        5,8,10,
+        6,7,10,
+        7,9,80
+    };
+
+	NO* teste5 = NULL;
+	teste5 = caminho(N5, 10, ijpeso5, aberto5, inicio5, fim5, chave5);
+    printf("    ");
+    while(teste5) {
+        printf("%i", teste5->adj);
+        teste5 = teste5->prox;
+        if(teste5) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+	// teste 6
+    // novo grafo
+    printf("Teste 6\n");
+	int N6 = 5;
+	int aberto6[] = {1,1,0,1,1}; 
+	int inicio6 = 5;
+	int fim6 = 1;
+	int chave6 = 4;
+	int ijpeso6[] = {
+        1,2,80,
+        1,3,80,
+        2,4,20,
+        2,5,80,
+        3,4,10,
+        4,5,10,
+    };
+
+	NO* teste6 = NULL;
+	teste6 = caminho(N6, 6, ijpeso6, aberto6, inicio6, fim6, chave6);
+    printf("    ");
+    while(teste6) {
+        printf("%i", teste6->adj);
+        teste6 = teste6->prox;
+        if(teste6) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
     return 1;
 }
 
