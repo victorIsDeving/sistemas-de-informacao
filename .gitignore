@@ -2,3 +2,5 @@
 *.exe
 #ignorar todos os javas class
 *.class
+#ignorar arquivos .bin
+*.bin
