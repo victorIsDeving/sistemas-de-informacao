@@ -20,13 +20,20 @@ int main() {
     r3.estado = 12;
     r3.idade = 22;
     r3.valido = true;
+    REGISTRO r4;
+    r4.NroUSP = 44444;
+    r4.curso = 2;
+    r4.estado = 14;
+    r4.idade = 24;
+    r4.valido = true;
 
     /* Create the file */
     FILE *fh = fopen ("origem.bin", "wb");
     if (fh != NULL) {
-        fwrite (&r1, sizeof (REGISTRO), 1, fh);
-        fwrite (&r2, sizeof (REGISTRO), 1, fh);
         fwrite (&r3, sizeof (REGISTRO), 1, fh);
+        fwrite (&r2, sizeof (REGISTRO), 1, fh);
+        fwrite (&r4, sizeof (REGISTRO), 1, fh);
+        fwrite (&r1, sizeof (REGISTRO), 1, fh);
         fclose (fh);
     }
 
