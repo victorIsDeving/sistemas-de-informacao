@@ -104,3 +104,14 @@ void printFile(FILE* f) {
             i++;
         }
 }
+
+// Função principal de ordenação
+int buscarEndereco(TABELA tabela[], int nusp, int size) {
+    for (int i = 0; i < V; i++) {
+        if (tabela[i].chave == nusp) {
+            return i;
+        }
+    }
+
+    return -1;
+}

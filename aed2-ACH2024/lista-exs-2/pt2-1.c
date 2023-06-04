@@ -2,17 +2,6 @@
 #include <stdlib.h>
 #include "./basics.c"
 
-// Função principal de ordenação
-int buscarEndereco(TABELA tabela[], int nusp, int size) {
-    for (int i = 0; i < V; i++) {
-        if (tabela[i].chave == nusp) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 int main() {
     REGISTRO rNovo;
     rNovo.NroUSP = 66666;
