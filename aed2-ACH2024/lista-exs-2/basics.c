@@ -89,18 +89,22 @@ void printArray(TABELA array[], int size) {
     printf("\n");
 }
 
+void printRegistro(REGISTRO* r) {
+    printf (
+        "   NrUsp: %i\n"
+        "   Curso: %i\n"
+        "   Estad: %i\n"
+        "   Idade: %i\n"
+        "   Valid: %i\n", 
+        r->NroUSP, r->curso, r->estado, r->idade, r->valido);
+}
+
 void printFile(FILE* f) {
         REGISTRO r;
         int i = 1;
         while (fread(&r, sizeof(REGISTRO), 1, f) == 1) {
-            printf (
-                "   Registro %i:\n"
-                "       NrUsp: %i\n"
-                "       Curso: %i\n"
-                "       Estad: %i\n"
-                "       Idade: %i\n"
-                "       Valid: %i\n", 
-                i, r.NroUSP, r.curso, r.estado, r.idade, r.valido);
+            printf ("Registro %i:\n", i);
+            printRegistro(&r);
             i++;
         }
 }
