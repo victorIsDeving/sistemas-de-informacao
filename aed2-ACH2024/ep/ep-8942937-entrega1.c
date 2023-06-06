@@ -363,6 +363,8 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
     }
     aux2->prox = aux1;
 
+    printf("Dist1: %i\n", dist1);
+    printf("Dist2: %i\n", dist2);
     if (dist1 <= dist2) {
         resp = path1;
     } else {
@@ -377,25 +379,224 @@ NO *caminho(int N, int A, int *ijpeso, int *aberto, int inicio, int fim, int cha
 // use main() para fazer chamadas de teste ao seu programa
 //---------------------------------------------------------
 int main() {
-	// aqui vc pode incluir codigo de teste
+	// // aqui vc pode incluir codigo de teste
 
-    // teste 1
-	// exemplo de teste trivial
+    // // teste 1
+	// // exemplo de teste trivial
+    // printf("Teste 1\n");
+	// int N1=3; // grafo de 3 vertices numerados de 1..3
+	// int aberto1[] = {1,1,1}; // todos abertos
+	// int inicio1=1;
+	// int fim1=3;
+	// int chave1=2;
+	// int ijpeso1[]={
+    //     1,2,10, 
+    //     2,3,20, 
+    //     3,1,10
+    // };
+
+	// // o EP sera testado com uma serie de chamadas como esta
+	// NO* teste1 = NULL;
+	// teste1 = caminho(N1, 3, ijpeso1, aberto1, inicio1, fim1, chave1);
+    // printf("    ");
+    // while(teste1) {
+    //     printf("%i", teste1->adj);
+    //     teste1 = teste1->prox;
+    //     if(teste1) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+	// // teste 2
+    // // exemplo de teste no enunciado do ep
+    // printf("Teste 2\n");
+	// int N2 = 9;
+	// int aberto2[] = {0,1,1,1,1,1,1,1}; 
+	// int inicio2 = 7;
+	// int fim2 = 4;
+	// int chave2 = 6;
+	// int ijpeso2[] = {
+    //     1,2,30, 
+    //     1,3,20, 
+    //     2,6,20, 
+    //     2,7,30, 
+    //     3,4,20,
+    //     3,7,80,
+    //     4,9,80,
+    //     5,8,10,
+    //     6,7,10,
+    //     7,9,80
+    // };
+
+	// NO* teste2 = NULL;
+	// teste2 = caminho(N2, 10, ijpeso2, aberto2, inicio2, fim2, chave2);
+    // printf("    ");
+    // while(teste2) {
+    //     printf("%i", teste2->adj);
+    //     teste2 = teste2->prox;
+    //     if(teste2) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+	// // teste 3
+    // // enunciado do ep com uma diferença no vetor de vértices abertos
+    // printf("Teste 3\n");
+	// int N3 = 9;
+	// int aberto3[] = {1,1,0,1,1,1,1,1}; 
+	// int inicio3 = 7;
+	// int fim3 = 4;
+	// int chave3 = 6;
+	// int ijpeso3[] = {
+    //     1,2,30, 
+    //     1,3,20, 
+    //     2,6,20, 
+    //     2,7,30, 
+    //     3,4,20,
+    //     3,7,80,
+    //     4,9,80,
+    //     5,8,10,
+    //     6,7,10,
+    //     7,9,80
+    // };
+
+	// NO* teste3 = NULL;
+	// teste3 = caminho(N3, 10, ijpeso3, aberto3, inicio3, fim3, chave3);
+    // printf("    ");
+    // while(teste3) {
+    //     printf("%i", teste3->adj);
+    //     teste3 = teste3->prox;
+    //     if(teste3) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+	// // teste 4
+    // // teste 3 com diferença no peso de algumas arestas
+    // printf("Teste 4\n");
+	// int N4 = 9;
+	// int aberto4[] = {1,1,0,1,1,1,1,1}; 
+	// int inicio4 = 7;
+	// int fim4 = 4;
+	// int chave4 = 6;
+	// int ijpeso4[] = {
+    //     1,2,30, 
+    //     1,3,20, 
+    //     2,6,20, 
+    //     2,7,30, 
+    //     3,4,20,
+    //     3,7,80,
+    //     4,9,80,
+    //     5,8,10,
+    //     6,7,10,
+    //     7,9,10
+    // };
+
+	// NO* teste4 = NULL;
+	// teste4 = caminho(N4, 10, ijpeso4, aberto4, inicio4, fim4, chave4);
+    // printf("    ");
+    // while(teste4) {
+    //     printf("%i", teste4->adj);
+    //     teste4 = teste4->prox;
+    //     if(teste4) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+	// // teste 5
+    // // teste 3 com diferença no peso de algumas arestas
+    // printf("Teste 5\n");
+	// int N5 = 9;
+	// int aberto5[] = {1,1,0,1,1,1,1,1}; 
+	// int inicio5 = 7;
+	// int fim5 = 4;
+	// int chave5 = 6;
+	// int ijpeso5[] = {
+    //     1,2,30, 
+    //     1,3,20, 
+    //     2,6,20, 
+    //     2,7,10, 
+    //     3,4,20,
+    //     3,7,80,
+    //     4,9,80,
+    //     5,8,10,
+    //     6,7,10,
+    //     7,9,80
+    // };
+
+	// NO* teste5 = NULL;
+	// teste5 = caminho(N5, 10, ijpeso5, aberto5, inicio5, fim5, chave5);
+    // printf("    ");
+    // while(teste5) {
+    //     printf("%i", teste5->adj);
+    //     teste5 = teste5->prox;
+    //     if(teste5) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+	// // teste 6
+    // // novo grafo
+    // printf("Teste 6\n");
+	// int N6 = 5;
+	// int aberto6[] = {1,1,0,1,1}; 
+	// int inicio6 = 5;
+	// int fim6 = 1;
+	// int chave6 = 4;
+	// int ijpeso6[] = {
+    //     1,2,80,
+    //     1,3,80,
+    //     2,4,20,
+    //     2,5,80,
+    //     3,4,10,
+    //     4,5,10,
+    // };
+
+	// NO* teste6 = NULL;
+	// teste6 = caminho(N6, 6, ijpeso6, aberto6, inicio6, fim6, chave6);
+    // printf("    ");
+    // while(teste6) {
+    //     printf("%i", teste6->adj);
+    //     teste6 = teste6->prox;
+    //     if(teste6) {
+    //         printf(" -> ");
+    //     }
+    // }
+    // printf("\n");
+
+
+    // TESTES DA AVALIAÇÃO DO PROFESSOR
     printf("Teste 1\n");
-	int N1=3; // grafo de 3 vertices numerados de 1..3
-	int aberto1[] = {1,1,1}; // todos abertos
+	int N1=9;
+	int aberto1[] = {1,0,1,1,1,1,1,1,1}; // 2 fechado
 	int inicio1=1;
-	int fim1=3;
-	int chave1=2;
+	int fim1=9;
+	int chave1=3;
 	int ijpeso1[]={
-        1,2,10, 
-        2,3,20, 
-        3,1,10
+        1,2,1, 
+        1,4,2, 
+        1,6,1,
+        1,8,4,
+        2,3,4,
+        2,4,2,
+        2,8,1,
+        2,9,5,
+        3,4,1,
+        3,5,1,
+        4,5,1,
+        5,6,2,
+        6,7,1,
+        7,8,2,
+        8,9,1
     };
 
-	// o EP sera testado com uma serie de chamadas como esta
 	NO* teste1 = NULL;
-	teste1 = caminho(N1, 3, ijpeso1, aberto1, inicio1, fim1, chave1);
+	teste1 = caminho(N1, 15, ijpeso1, aberto1, inicio1, fim1, chave1);
     printf("    ");
     while(teste1) {
         printf("%i", teste1->adj);
@@ -406,162 +607,163 @@ int main() {
     }
     printf("\n");
 
-	// teste 2
-    // exemplo de teste no enunciado do ep
     printf("Teste 2\n");
-	int N2 = 9;
-	int aberto2[] = {0,1,1,1,1,1,1,1}; 
-	int inicio2 = 7;
-	int fim2 = 4;
-	int chave2 = 6;
-	int ijpeso2[] = {
-        1,2,30, 
-        1,3,20, 
-        2,6,20, 
-        2,7,30, 
-        3,4,20,
-        3,7,80,
-        4,9,80,
-        5,8,10,
-        6,7,10,
-        7,9,80
-    };
+	int aberto2[] = {1,0,1,1,1,1,1,0,1};
+	inicio1=1;
+	fim1=9;
+	chave1=7;
 
-	NO* teste2 = NULL;
-	teste2 = caminho(N2, 10, ijpeso2, aberto2, inicio2, fim2, chave2);
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto2, inicio1, fim1, chave1);
     printf("    ");
-    while(teste2) {
-        printf("%i", teste2->adj);
-        teste2 = teste2->prox;
-        if(teste2) {
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
             printf(" -> ");
         }
     }
     printf("\n");
 
-	// teste 3
-    // enunciado do ep com uma diferença no vetor de vértices abertos
     printf("Teste 3\n");
-	int N3 = 9;
-	int aberto3[] = {1,1,0,1,1,1,1,1}; 
-	int inicio3 = 7;
-	int fim3 = 4;
-	int chave3 = 6;
-	int ijpeso3[] = {
-        1,2,30, 
-        1,3,20, 
-        2,6,20, 
-        2,7,30, 
-        3,4,20,
-        3,7,80,
-        4,9,80,
-        5,8,10,
-        6,7,10,
-        7,9,80
-    };
+	int aberto3[] = {1,0,1,1,1,1,1,0,1};
+	inicio1=1;
+	fim1=9;
+	chave1=3;
 
-	NO* teste3 = NULL;
-	teste3 = caminho(N3, 10, ijpeso3, aberto3, inicio3, fim3, chave3);
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto3, inicio1, fim1, chave1);
     printf("    ");
-    while(teste3) {
-        printf("%i", teste3->adj);
-        teste3 = teste3->prox;
-        if(teste3) {
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
             printf(" -> ");
         }
     }
     printf("\n");
 
-	// teste 4
-    // teste 3 com diferença no peso de algumas arestas
     printf("Teste 4\n");
-	int N4 = 9;
-	int aberto4[] = {1,1,0,1,1,1,1,1}; 
-	int inicio4 = 7;
-	int fim4 = 4;
-	int chave4 = 6;
-	int ijpeso4[] = {
-        1,2,30, 
-        1,3,20, 
-        2,6,20, 
-        2,7,30, 
-        3,4,20,
-        3,7,80,
-        4,9,80,
-        5,8,10,
-        6,7,10,
-        7,9,10
-    };
+	int aberto4[] = {1,0,1,0,1,1,1,0,1};
+	inicio1=1;
+	fim1=9;
+	chave1=3;
 
-	NO* teste4 = NULL;
-	teste4 = caminho(N4, 10, ijpeso4, aberto4, inicio4, fim4, chave4);
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto4, inicio1, fim1, chave1);
     printf("    ");
-    while(teste4) {
-        printf("%i", teste4->adj);
-        teste4 = teste4->prox;
-        if(teste4) {
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
             printf(" -> ");
         }
     }
     printf("\n");
 
-	// teste 5
-    // teste 3 com diferença no peso de algumas arestas
     printf("Teste 5\n");
-	int N5 = 9;
-	int aberto5[] = {1,1,0,1,1,1,1,1}; 
-	int inicio5 = 7;
-	int fim5 = 4;
-	int chave5 = 6;
-	int ijpeso5[] = {
-        1,2,30, 
-        1,3,20, 
-        2,6,20, 
-        2,7,10, 
-        3,4,20,
-        3,7,80,
-        4,9,80,
-        5,8,10,
-        6,7,10,
-        7,9,80
-    };
+	int aberto5[] = {1,1,1,1,1,1,1,1,1};
+	inicio1=9;
+	fim1=4;
+	chave1=7;
 
-	NO* teste5 = NULL;
-	teste5 = caminho(N5, 10, ijpeso5, aberto5, inicio5, fim5, chave5);
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto5, inicio1, fim1, chave1);
     printf("    ");
-    while(teste5) {
-        printf("%i", teste5->adj);
-        teste5 = teste5->prox;
-        if(teste5) {
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
             printf(" -> ");
         }
     }
     printf("\n");
 
-	// teste 6
-    // novo grafo
     printf("Teste 6\n");
-	int N6 = 5;
-	int aberto6[] = {1,1,0,1,1}; 
-	int inicio6 = 5;
-	int fim6 = 1;
-	int chave6 = 4;
-	int ijpeso6[] = {
-        1,2,80,
-        1,3,80,
-        2,4,20,
-        2,5,80,
-        3,4,10,
-        4,5,10,
-    };
+	int aberto6[] = {1,0,1,1,1,1,1,1,1};
+	inicio1=9;
+	fim1=4;
+	chave1=7;
 
-	NO* teste6 = NULL;
-	teste6 = caminho(N6, 6, ijpeso6, aberto6, inicio6, fim6, chave6);
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto6, inicio1, fim1, chave1);
     printf("    ");
-    while(teste6) {
-        printf("%i", teste6->adj);
-        teste6 = teste6->prox;
-        if(teste6) {
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+    printf("Teste 7\n");
+	int aberto7[] = {0,0,1,1,1,1,1,1,1};
+	inicio1=9;
+	fim1=4;
+	chave1=7;
+
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto7, inicio1, fim1, chave1);
+    printf("    ");
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+    printf("Teste 8\n");
+	int aberto8[] = {1,1,1,1,1,1,1,0,1};
+	inicio1=9;
+	fim1=4;
+	chave1=7;
+
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto8, inicio1, fim1, chave1);
+    printf("    ");
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+    printf("Teste 9\n");
+	int aberto9[] = {1,0,1,1,0,0,1,1,1};
+	inicio1=8;
+	fim1=6;
+	chave1=3;
+
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto9, inicio1, fim1, chave1);
+    printf("    ");
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
+            printf(" -> ");
+        }
+    }
+    printf("\n");
+
+    printf("Teste 10\n");
+	int aberto10[] = {0,1,1,1,0,0,1,1,1};
+	inicio1=8;
+	fim1=6;
+	chave1=3;
+
+	teste1 = NULL;
+	teste1 = caminho(N1, 15, ijpeso1, aberto10, inicio1, fim1, chave1);
+    printf("    ");
+    while(teste1) {
+        printf("%i", teste1->adj);
+        teste1 = teste1->prox;
+        if(teste1) {
             printf(" -> ");
         }
     }
