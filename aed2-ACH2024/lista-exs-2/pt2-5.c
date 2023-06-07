@@ -1,9 +1,14 @@
+//Teste
+// gcc pt2-5.c -o pt2-5 && ./pt2-5
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "./basics.c"
 
 int main() {
-    int nuspAlvo = 11111;
+    createBin();
+
+    int nuspAlvo = 22222;
     int nuspNovo = 88888;
 
     // cria ponteiro para arquivo
@@ -17,16 +22,9 @@ int main() {
         exit(0);
     }
 
-    //Visualizar o arquivo de origem
-    printf("ARQUIVO DE ORIGEM\n");
+    //Visualizar o arquivo ORIGINAL
+    printf("ARQUIVO ORIGINAL\n");
     printFile(arq1);
-
-    FILE* arq2;
-    arq2 = fopen("destino.bin", "wb");
-    if (arq2 == NULL) {
-        printf("Arquivo não abriu.\n");
-        exit(0);
-    }
 
     // Criar a tabela de índices primários
     TABELA tabela[V];
@@ -37,24 +35,35 @@ int main() {
         inserirIndice(tabela, r.NroUSP, prox);
         prox++;
     }
+
+    fclose(arq1);
+
+    FILE* arq2;
+    arq2 = fopen("origem.bin", "rb+");
+    if (arq2 == NULL) {
+        printf("Arquivo não abriu.\n");
+        exit(0);
+    }
     
-    // Escrever no arquivo de destino os registros
-    for (int i = 0; i < prox; i++) {
-        fseek(arq1, sizeof(REGISTRO) * tabela[i].end, SEEK_SET);
-        fread(&r, sizeof(REGISTRO), 1, arq1);
-        if (tabela[i].chave == nuspAlvo) {
-            r.NroUSP = nuspNovo;
-        }
+    // Verificar os registros pela tabela de indices primários
+    int indice = buscarEndereco(tabela, nuspAlvo, V);
+    if (indice == -1) {
+        printf("\nRegistro %i nao existe no arquivo\n", nuspAlvo);
+    } else {
+        printf("\nRegistro encontrado na posicao %i\n", indice);
+        fseek(arq2, sizeof(REGISTRO) * indice, SEEK_SET);
+        fread(&r, sizeof(REGISTRO), 1, arq2);
+        fseek(arq2, -sizeof(REGISTRO), SEEK_CUR);
+        r.NroUSP = nuspNovo;
         fwrite(&r, sizeof(REGISTRO), 1, arq2);
     }
 
-    fclose(arq1);
     fclose(arq2);
 
     // Leitura para ver se o arquivo destino está certo
-    FILE* f = fopen ("destino.bin", "rb");
+    FILE* f = fopen ("origem.bin", "rb");
     if (f != NULL) {
-        printf("\nARQUIVO DE DESTINO\n");
+        printf("\nARQUIVO FINAL\n");
         printFile(f);
         fclose (f);
     }
