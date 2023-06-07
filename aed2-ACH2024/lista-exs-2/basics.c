@@ -20,6 +20,44 @@ typedef struct {
     int end;
 } TABELA;
 
+// Cria um arquivo .bin com alguns registros
+void createBin() {
+    REGISTRO r1;
+    r1.NroUSP = 11111;
+    r1.curso = 0;
+    r1.estado = 10;
+    r1.idade = 20;
+    r1.valido = true;
+    REGISTRO r2;
+    r2.NroUSP = 33333;
+    r2.curso = 0;
+    r2.estado = 13;
+    r2.idade = 23;
+    r2.valido = true;
+    REGISTRO r3;
+    r3.NroUSP = 22222;
+    r3.curso = 1;
+    r3.estado = 12;
+    r3.idade = 22;
+    r3.valido = true;
+    REGISTRO r4;
+    r4.NroUSP = 44444;
+    r4.curso = 2;
+    r4.estado = 14;
+    r4.idade = 24;
+    r4.valido = true;
+
+    /* Create the file */
+    FILE *fh = fopen ("origem.bin", "wb");
+    if (fh != NULL) {
+        fwrite (&r3, sizeof (REGISTRO), 1, fh);
+        fwrite (&r2, sizeof (REGISTRO), 1, fh);
+        fwrite (&r4, sizeof (REGISTRO), 1, fh);
+        fwrite (&r1, sizeof (REGISTRO), 1, fh);
+        fclose (fh);
+    }
+}
+
 // function to swap elements
 void swap(TABELA *a, TABELA *b) {
     TABELA t = *a;
