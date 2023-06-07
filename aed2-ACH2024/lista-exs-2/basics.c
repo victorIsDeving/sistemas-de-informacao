@@ -157,3 +157,16 @@ int buscarEndereco(TABELA tabela[], int nusp, int size) {
 
     return -1;
 }
+
+// Função principal de ordenação
+int excluirIndice(TABELA tabela[], int chave, int size) {
+    for (int i = 0; i < V; i++) {
+        if (tabela[i].chave == chave) {
+            tabela[i].chave = -1;
+            tabela[i].end = -1;
+            return i;
+        }
+    }
+
+    return -1;
+}

@@ -1,8 +1,12 @@
+// Teste
+// gcc pt2-3.c -o pt2-3 && ./pt2-3
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "./basics.c"
 
 int main() {
+    createBin();
     int curso = 0;
 
     // cria ponteiro para arquivo
@@ -16,16 +20,9 @@ int main() {
         exit(0);
     }
 
-    //Visualizar o arquivo de origem
-    printf("ARQUIVO DE ORIGEM\n");
+    //Visualizar o arquivo original
+    printf("ARQUIVO ORIGINAL\n");
     printFile(arq1);
-
-    FILE* arq2;
-    arq2 = fopen("destino.bin", "wb");
-    if (arq2 == NULL) {
-        printf("Arquivo não abriu.\n");
-        exit(0);
-    }
 
     // Criar a tabela de índices primários
     TABELA tabela[V];
@@ -36,24 +33,39 @@ int main() {
         inserirIndice(tabela, r.curso, prox);
         prox++;
     }
+
+    fclose(arq1);
+
+    // Aqui a resolução que importa desse exercício
+    FILE* fileWrite;
+    // abre arquivo no modo de append binary
+    fileWrite = fopen("origem.bin", "rb+");
+    if (fileWrite == NULL) {
+        printf("Arquivo não abriu.\n");
+        exit(0);
+    }
     
-    // Escrever no arquivo de destino os registros
+    // Exclusão lógica
     for (int i = 0; i < prox; i++) {
-        if (tabela[i].chave != curso) {
-            fseek(arq1, sizeof(REGISTRO) * tabela[i].end, SEEK_SET);
-            fread(&r, sizeof(REGISTRO), 1, arq1);
-            fwrite(&r, sizeof(REGISTRO), 1, arq2);
+        if (tabela[i].chave == curso) {
+            int indice = excluirIndice(tabela, curso, V);
+            tabela[i].chave = -1;
+            tabela[i].end = -1;
+            fseek(fileWrite, sizeof(REGISTRO) * indice, SEEK_SET);
+            fread(&r, sizeof(REGISTRO), 1, fileWrite);
+            r.valido = -1;
+            fseek(fileWrite, -sizeof(REGISTRO), SEEK_CUR);
+            fwrite(&r, sizeof(REGISTRO), 1, fileWrite);
         }
     }
 
-    fclose(arq1);
-    fclose(arq2);
+    fclose(fileWrite);
 
     // Leitura para ver se o arquivo destino está certo
-    FILE* f = fopen ("destino.bin", "rb");
+    FILE* f = fopen ("origem.bin", "rb");
     if (f != NULL) {
-        printf("\nARQUIVO DE DESTINO\n");
-        printFile(f);
+        printf("\nARQUIVO FINAL\n");
+        printFile(arq1);
         fclose (f);
     }
 
