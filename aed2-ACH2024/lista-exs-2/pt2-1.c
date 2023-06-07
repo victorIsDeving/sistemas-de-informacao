@@ -1,69 +1,70 @@
+// For testing
+// gcc pt2-1.c -o pt2-1 && ./pt2-1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "./basics.c"
 
 int main() {
+    // Resetar o bin para partir sempre do mesmo ponto
+    createBin();
+
     REGISTRO rNovo;
-    rNovo.NroUSP = 66666;
+    rNovo.NroUSP = 77777;
     rNovo.curso = 1;
     rNovo.estado = 10;
     rNovo.idade = 20;
     rNovo.valido = true;
 
     // cria ponteiro para arquivo
-    FILE* arq1;
+    FILE* fileRead;
     // abre arquivo no modo de leitura
-    arq1 = fopen("origem.bin", "rb");
+    fileRead = fopen("origem.bin", "rb");
     // verifica se o arquivo abre com sucesso
     // tratativa de erro
-    if (arq1 == NULL) {
+    if (fileRead == NULL) {
         printf("Arquivo não abriu.\n");
         exit(0);
     }
-
-    //Visualizar o arquivo de origem
-    printf("ARQUIVO DE ORIGEM\n");
-    printFile(arq1);
-
-    FILE* arq2;
-    arq2 = fopen("destino.bin", "wb");
-    if (arq2 == NULL) {
-        printf("Arquivo não abriu.\n");
-        exit(0);
-    }
+    printf("\nARQUIVO ORIGINAL\n");
+    printFile(fileRead);
 
     // Criar a tabela de índices primários
     TABELA tabela[V];
     REGISTRO r;
     int prox = 0;
-    fseek(arq1, 0, SEEK_SET);
-    while (fread(&r, sizeof(REGISTRO), 1, arq1) == 1) {
+    fseek(fileRead, 0, SEEK_SET);
+    while (fread(&r, sizeof(REGISTRO), 1, fileRead) == 1) {
         inserirIndice(tabela, r.NroUSP, prox);
         prox++;
     }
     
-    // Escrever no arquivo de destino os registros
-    for (int i = 0; i < prox; i++) {
-        // Colocar ponteiro do arquivo origem no registro
-        // para ler registro a registro na ordem
-        fseek(arq1, sizeof(REGISTRO) * tabela[i].end, SEEK_SET);
-        fread(&r, sizeof(REGISTRO), 1, arq1);
-        fwrite(&r, sizeof(REGISTRO), 1, arq2);
+    fclose(fileRead);
+
+    // cria ponteiro para arquivo
+    FILE* fileWrite;
+    // abre arquivo no modo de leitura
+    fileWrite = fopen("origem.bin", "ab");
+    // verifica se o arquivo abre com sucesso
+    // tratativa de erro
+    if (fileWrite == NULL) {
+        printf("Arquivo não abriu.\n");
+        exit(0);
     }
 
     if (buscarEndereco(tabela, rNovo.NroUSP, V) == -1) {
-        fwrite(&rNovo, sizeof(REGISTRO), 1, arq2);
+        fseek(fileWrite, 0, SEEK_END);
+        fwrite(&rNovo, sizeof(REGISTRO), 1, fileWrite);
     } else {
         printf("\nRegistro %i ja existe no arquivo\n", rNovo.NroUSP);
     }
 
-    fclose(arq1);
-    fclose(arq2);
+    fclose(fileWrite);
 
     // Leitura para ver se o arquivo destino está certo
-    FILE* f = fopen ("destino.bin", "rb");
+    FILE* f = fopen ("origem.bin", "rb");
     if (f != NULL) {
-        printf("\nARQUIVO DE DESTINO\n");
+        printf("\nARQUIVO FINAL\n");
         printFile(f);
         fclose (f);
     }
