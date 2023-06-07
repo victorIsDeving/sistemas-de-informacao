@@ -41,12 +41,10 @@ int main() {
     
     fclose(fileRead);
 
-    // cria ponteiro para arquivo
+    // Aqui a resolução que importa desse exercício
     FILE* fileWrite;
-    // abre arquivo no modo de leitura
+    // abre arquivo no modo de append binary
     fileWrite = fopen("origem.bin", "ab");
-    // verifica se o arquivo abre com sucesso
-    // tratativa de erro
     if (fileWrite == NULL) {
         printf("Arquivo não abriu.\n");
         exit(0);
@@ -61,7 +59,7 @@ int main() {
 
     fclose(fileWrite);
 
-    // Leitura para ver se o arquivo destino está certo
+    // Leitura para ver se o arquivo resultado está certo
     FILE* f = fopen ("origem.bin", "rb");
     if (f != NULL) {
         printf("\nARQUIVO FINAL\n");
