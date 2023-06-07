@@ -30,6 +30,7 @@ int main() {
         prox++;
     }
 
+    // Aqui a resolução que importa desse exercício
     int indice = buscarEndereco(tabela, nusp, V);
     if (indice == -1) {
         printf("\nRegistro %i nao existe no arquivo\n", nusp);
