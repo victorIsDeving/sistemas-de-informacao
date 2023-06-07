@@ -1,9 +1,13 @@
+// Teste
+// gcc pt2-4.c -o pt2-4 && ./pt2-4
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "./basics.c"
 
 int main() {
-    int cursoAlvo = 0;
+    createBin();
+    int nuspAlvo = 44444;
     int cursoNovo = 5;
 
     // cria ponteiro para arquivo
@@ -17,16 +21,9 @@ int main() {
         exit(0);
     }
 
-    //Visualizar o arquivo de origem
-    printf("ARQUIVO DE ORIGEM\n");
+    //Visualizar o arquivo ORIGINAL
+    printf("ARQUIVO ORIGINAL\n");
     printFile(arq1);
-
-    FILE* arq2;
-    arq2 = fopen("destino.bin", "wb");
-    if (arq2 == NULL) {
-        printf("Arquivo não abriu.\n");
-        exit(0);
-    }
 
     // Criar a tabela de índices primários
     TABELA tabela[V];
@@ -34,27 +31,38 @@ int main() {
     int prox = 0;
     fseek(arq1, 0, SEEK_SET);
     while (fread(&r, sizeof(REGISTRO), 1, arq1) == 1) {
-        inserirIndice(tabela, r.curso, prox);
+        inserirIndice(tabela, r.NroUSP, prox);
         prox++;
     }
     
-    // Escrever no arquivo de destino os registros
-    for (int i = 0; i < prox; i++) {
-        fseek(arq1, sizeof(REGISTRO) * tabela[i].end, SEEK_SET);
-        fread(&r, sizeof(REGISTRO), 1, arq1);
-        if (tabela[i].chave == cursoAlvo) {
-            r.curso = cursoNovo;
-        }
+    fclose(arq1);
+    
+    FILE* arq2;
+    arq2 = fopen("origem.bin", "rb+");
+    if (arq2 == NULL) {
+        printf("Arquivo não abriu.\n");
+        exit(0);
+    }
+    
+    // Verificar os registros pela tabela de indices primários
+    int indice = buscarEndereco(tabela, nuspAlvo, V);
+    if (indice == -1) {
+        printf("\nRegistro %i nao existe no arquivo\n", nuspAlvo);
+    } else {
+        printf("\nRegistro encontrado: %i\n", indice);
+        fseek(arq2, sizeof(REGISTRO) * indice, SEEK_SET);
+        fread(&r, sizeof(REGISTRO), 1, arq2);
+        fseek(arq2, -sizeof(REGISTRO), SEEK_CUR);
+        r.curso = cursoNovo;
         fwrite(&r, sizeof(REGISTRO), 1, arq2);
     }
 
-    fclose(arq1);
     fclose(arq2);
 
     // Leitura para ver se o arquivo destino está certo
-    FILE* f = fopen ("destino.bin", "rb");
+    FILE* f = fopen ("origem.bin", "rb");
     if (f != NULL) {
-        printf("\nARQUIVO DE DESTINO\n");
+        printf("\nARQUIVO FINAL\n");
         printFile(f);
         fclose (f);
     }
