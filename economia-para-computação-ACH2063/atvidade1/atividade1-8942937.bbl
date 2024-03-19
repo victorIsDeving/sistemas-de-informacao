@@ -1,0 +1,81 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{Chaplin1936}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=ed813de7fe0d23037c45fc0a4543d0c8}{%
+           family={Chaplin},
+           familyi={C\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \strng{fullhash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \strng{bibnamehash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \strng{authorbibnamehash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \strng{authornamehash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \strng{authorfullhash}{ed813de7fe0d23037c45fc0a4543d0c8}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Filme}
+      \field{title}{Tempos Modernos}
+      \field{year}{1936}
+    \endentry
+    \entry{Toffler1980}{book}{}
+      \name{author}{1}{}{%
+        {{hash=9afecae7596641c5106666aaf15c00e4}{%
+           family={Toffler},
+           familyi={T\bibinitperiod},
+           given={Alvin},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=fec8fb41e0840a839918934b78a1b68e}{%
+           family={Books},
+           familyi={B\bibinitperiod},
+           given={Bantam},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Bantam Book I in association with William Morrow \& Co.,Inc.}%
+      }
+      \strng{namehash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{fullhash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{bibnamehash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{authorbibnamehash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{authornamehash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{authorfullhash}{9afecae7596641c5106666aaf15c00e4}
+      \strng{editorbibnamehash}{fec8fb41e0840a839918934b78a1b68e}
+      \strng{editornamehash}{fec8fb41e0840a839918934b78a1b68e}
+      \strng{editorfullhash}{fec8fb41e0840a839918934b78a1b68e}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Third Wave}
+      \field{year}{1980}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

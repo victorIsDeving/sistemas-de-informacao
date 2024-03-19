@@ -1,0 +1,19 @@
+\section{
+    Seja \(A\) uma linguagem decidível. Mostre que a linguagem \(A^R\) também é decidível, onde: \\
+    \(A^R = \{w \in \Sigma^* | w^R \in A\}\), ou seja,   
+    \(w \in A^R \Leftrightarrow w^R \in A\)
+    }
+
+\setlength{\parindent}{4em}
+\setlength{\parskip}{0.5em}
+\renewcommand{\baselinestretch}{1}
+
+\blintext
+
+\begin{enumerate}    
+    \item Inverta a palavra \(w\), tal que \(v = w^R\).
+
+    \item Rode a máquina de Turing \(N\) sob o input \(<A,v>\).
+
+    \item Se \(N\) aceitar, \textit{aceite}; se \(N\) rejeitar, \textit{rejeite}."
+\end{enumerate}

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/VanGogh.dir/stb_image/stb_image.cpp.o CMakeFiles/VanGogh.dir/glad.c.o CMakeFiles/VanGogh.dir/VanGogh.cpp.o -o VanGogh  -lGL -ldl -lglfw 
