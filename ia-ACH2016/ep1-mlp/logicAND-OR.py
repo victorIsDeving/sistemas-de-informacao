@@ -2,7 +2,7 @@ import pandas as pd #biblioteca para ler e escrever arquivos csv
 import numpy as np #matrix calculations
 import copy
 
-#Reads input csv file and returns a matrix os inputs + target
+#Reads input csv file and returns a matrix of inputs + target
 def readInput(file) :
     matrix = []
     with open(file, newline='') as csvFile:
@@ -42,8 +42,8 @@ def training(inputs, targets, weights, rate, threshold):
     #start of epochs training
     epochCount = 0
     while True:
-        #temp matrix for weights comparisson after epoch
-        tempWeights = copy.deepcopy(weights)
+        #flag to check for weights change in epoch
+        weightsChange = False
         #for each training pair
         for row in range(len(inputs)):
             #dot product input and weights
@@ -52,10 +52,13 @@ def training(inputs, targets, weights, rate, threshold):
             y = activationFunction(y_in[0], threshold)
             #update weights and bias
             if y != targets[row][0]:
+                weightsChange = True
                 for w in range(len(weights)):
                     weights[w][0] = weights[w][0] + rate * targets[row][0] * inputs[row][w]
         epochCount = epochCount + 1
-        if weights == tempWeights: 
+        #conditions to exit processing, either by converging either by epoch reaching limit
+        if weightsChange == False or epochCount == 100: 
+            if epochCount == 100: print("Did not converge!")
             break
     print(f"Epoch Count: {epochCount}")
 
@@ -67,6 +70,9 @@ def activationFunction(input, threshold):
 
 if __name__ == "__main__":
     filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemAND.csv"
+    # filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemOR.csv"
+    #shouldnt work for XOR problem
+    # filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemXOR.csv"
     inputsMatrix = readInput(filePath)
     targetsMatrix = createTargetsMatrix(inputsMatrix)
     weightsMatrix = createWeightsMatrix(inputsMatrix)
