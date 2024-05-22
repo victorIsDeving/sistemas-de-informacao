@@ -10,7 +10,7 @@ def readInput(file) :
         for row in range(df.shape[0]):
             array = df.values[row].tolist()
             matrix.append(array)
-        return matrix
+    return matrix
 
 #Divides the inputs matrix into inputs and targets matrixes
 def createTargetsMatrix(inputMatrix):
