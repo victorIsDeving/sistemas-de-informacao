@@ -64,9 +64,9 @@ def training(inputs, targets, rate, hiddenPerceptrons, outputPerceptrons):
                     weightsDeltaOutput[w][perceptron] = delta_error_output
             # backpropagation algorithm for hidden layer
             infos_error_hidden = np.eye(3,1)
-            # first the info related to the outter layer
+            # first.md the info related to the outter layer
             for w in range(len(weightsOutput) - 1):
-                a = w + 1 # need a workaround cause bias is the first in the matrix 
+                a = w + 1 # need a workaround cause bias is the first.md in the matrix
                 outer_info = np.dot(weightsOutput[a], infos_error_output)
                 infos_error_hidden[w] = outer_info
             # now the info related to the layer itself
@@ -102,7 +102,7 @@ def activationFunctionDerivative(input):
     return activationFunction(input)*(1 - activationFunction(input))
 
 if __name__ == "__main__":
-    filePath = "C:/sistemas-informacao/ia-ACH2016/ep1-mlp/portas-logicas/problemXOR.csv"
+    filePath = "/ep1-mlp/portas-logicas/problemXOR.csv"
     inputsMatrix = np.array([[1,1,1]], dtype=np.float64)
     targetsMatrix = np.array([[1],[0]], dtype=np.float64)
     rate = 0.5

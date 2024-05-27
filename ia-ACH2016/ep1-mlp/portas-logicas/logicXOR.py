@@ -45,7 +45,7 @@ def training(inputs, targets, rate, hiddenPerceptrons, outputPerceptrons, parada
     epochCounter = 0
     epochLimit = 1000 * 15
     while epochCounter < epochLimit: 
-        # if epochCounter == 1: break # to compare with handmade first epoch
+        # if epochCounter == 1: break # to compare with handmade first.md epoch
        
         # epoch counter
         epochCounter += 1
@@ -118,7 +118,7 @@ def erroQuadraticoMedio(targets, outputs):
     return np.mean((targets - outputs) ** 2)
 
 if __name__ == "__main__":
-    filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemXOR.csv"
+    filePath = "/ep1-mlp/portas-logicas/problemXOR.csv"
     inputsMatrix = readInput(filePath)
     targetsMatrix = createTargetsMatrix(inputsMatrix)
     inputsMatrix = biasToInputs(inputsMatrix)

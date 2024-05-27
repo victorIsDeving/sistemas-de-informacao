@@ -69,7 +69,7 @@ def activationFunction(input, threshold):
     return output
 
 if __name__ == "__main__":
-    filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemAND.csv"
+    filePath = "/ep1-mlp/portas-logicas/problemAND.csv"
     # filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemOR.csv"
     #shouldnt work for XOR problem
     # filePath = "C:\sistemas-informacao\ia-ACH2016\ep1-mlp\portas-logicas\problemXOR.csv"
