@@ -1,3 +1,5 @@
+# ALUNO VICTOR AUGUSTO COSTA MONTEIRO
+# NUSP 8942937
 import numpy as np  # matrix calculations
 
 
@@ -7,9 +9,7 @@ def feed_forward(inputs, targets,
                  function):
     # some auxiliary structures
     # matrix filled with ones, results of hidden layer processing
-    outputs_hidden = np.ones((len(inputs), perceptrons_hidden))
-    # add bias to hidden layer output
-    # outputs_hidden = np.insert(outputs_hidden, 0, 1, axis=1)
+    outputs_hidden = np.ones((len(inputs), perceptrons_hidden + 1))
     # results of final layer processing
     outputs_final = np.ones((len(targets), len(targets[0])))
 
@@ -37,17 +37,20 @@ def feed_forward(inputs, targets,
     return outputs_hidden, outputs_final
 
 
-def training(inp, tar, rate, perceptrons_hidden, early_stop, function, patience):
+def training(inp, tar, rate,
+             perceptrons_hidden, max_epochs,
+             early_stop, function, patience):
     inputs = inp
     targets = tar
     inputs_early_stop = []
     targets_early_stop = []
+    last_validation_loss = float('inf')
     best_validation_loss = float('inf')
     patience_counter = 0
     perceptrons_output = len(targets[0])
-    # randomized weights to start, [-0.5,0,5]
-    weights_hidden = np.random.uniform(-0.5, 0.5, (len(inputs[0]), perceptrons_hidden))  # bias considered inside input
-    weights_output = np.random.uniform(-0.5, 0.5, (perceptrons_hidden, perceptrons_output))  # add bias for output layer
+    # randomized weights to start, [-0.5,0.5]
+    weights_hidden = np.random.uniform(-0.5, 0.5, (len(inputs[0]), perceptrons_hidden))
+    weights_output = np.random.uniform(-0.5, 0.5, (perceptrons_hidden + 1, perceptrons_output))
     start_weights = [weights_hidden, weights_output]
 
     stopped_early = False
@@ -65,11 +68,10 @@ def training(inp, tar, rate, perceptrons_hidden, early_stop, function, patience)
 
     # start of epochs training
     epoch_counter = 0
-    epoch_max = 1000
-    while epoch_counter < epoch_max:
+    while epoch_counter < max_epochs:
         # if epoch_counter == 1: break # to compare with handmade first.md epoch
         epoch_counter += 1
-        print(f"Running epoch {epoch_counter} of {epoch_max}")
+        print(f"Running epoch {epoch_counter} of {max_epochs}")
         outputs_hidden, outputs_final = feed_forward(inputs, targets,
                                                      weights_hidden, weights_output,
                                                      perceptrons_hidden, perceptrons_output, function)
@@ -108,11 +110,14 @@ def training(inp, tar, rate, perceptrons_hidden, early_stop, function, patience)
             validation_loss = np.mean((targets_early_stop - val_outputs_final) ** 2)
             print(f"    Validation loss: {validation_loss}")
 
-            if validation_loss < best_validation_loss:
-                best_validation_loss = validation_loss
+            if validation_loss < last_validation_loss:
                 patience_counter = 0
             else:
                 patience_counter += 1
+            if validation_loss < best_validation_loss:
+                best_validation_loss = validation_loss
+            last_validation_loss = validation_loss
+            print(f"    Patience counter: {patience_counter}")
             if patience_counter >= patience:
                 print(f"    Early stopping at epoch {epoch_counter}")
                 stopped_early = True
@@ -153,6 +158,7 @@ def confusion_matrix(y_true, y_pred, classes, threshold):
 
 
 def apply_threshold(y_pred_prob, threshold):
+
     y_pred = (y_pred_prob >= threshold).astype(int)
     return y_pred
 
