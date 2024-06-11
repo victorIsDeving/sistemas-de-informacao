@@ -1,0 +1,3 @@
+localhost:5003
+localhost:5008
+localhost:5009
